@@ -25,7 +25,7 @@ builder.Services.AddCors(options => {
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
-
+//test branch
 // Configure the HTTP request pipeline.
 
 if (app.Environment.IsProduction() || app.Environment.IsDevelopment())
