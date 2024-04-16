@@ -11,6 +11,7 @@ namespace HwaidakAPI.Helpers.Profiles.Gym
         {
             CreateMap<VwGym, GetGym>();
             CreateMap<VwGymService, GetGymService>();
+            CreateMap<TblGymGallery, GetGymGallery>();
         }
     }
 }

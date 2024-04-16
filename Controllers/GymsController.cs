@@ -62,5 +62,16 @@ namespace HwaidakAPI.Controllers
 
             return Ok(gymServiceDto);
         }
+
+        [HttpGet("GetGymGallery/{GymId}")]
+        public async Task<ActionResult<IEnumerable<GetGymGallery>>> GetGymGallery(int GymId)
+        {
+            var gym = await _context.TblGyms.Where(x => x.GymId == GymId).FirstOrDefaultAsync();
+            if (gym == null) return NotFound(new ApiResponse(404, "this Gym doesnt exist"));
+            var gymGallery = await _context.TblGymGalleries.Where(x => x.Gymid == gym.GymId).ToListAsync();
+            var gymGalleryDto = _mapper.Map<IEnumerable<GetGymGallery>>(gymGallery);
+
+            return Ok(gymGalleryDto);
+        }
     }
 }
