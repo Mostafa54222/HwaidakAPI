@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HwaidakAPI.DTOs.Responses.Gyms;
+using HwaidakAPI.DTOs.Responses.Hotels;
 using HwaidakAPI.DTOs.Responses.Restaurants;
 using HwaidakAPI.DTOs.Responses.Rooms;
 using HwaidakAPI.Errors;
@@ -46,10 +47,10 @@ namespace HwaidakAPI.Controllers
 
             var Gyms = await _context.VwGyms.Where(x => x.HotelId == hotel.HotelId).ToListAsync();
 
-            var restaurantDto = _mapper.Map<IEnumerable<GetGym>>(Gyms);
+            var gymDto = _mapper.Map<IEnumerable<GetGym>>(Gyms);
 
 
-            return Ok(restaurantDto);
+            return Ok(gymDto);
         }
 
         [HttpGet("GetGymServices/{languageCode}")]
@@ -63,15 +64,18 @@ namespace HwaidakAPI.Controllers
             return Ok(gymServiceDto);
         }
 
-        [HttpGet("GetGymGallery/{GymId}")]
-        public async Task<ActionResult<IEnumerable<GetGymGallery>>> GetGymGallery(int GymId)
+        [HttpGet("GetGym/{GymId}")]
+        public async Task<ActionResult<IEnumerable<GetGym>>> GetGymGallery(int GymId)
         {
-            var gym = await _context.TblGyms.Where(x => x.GymId == GymId).FirstOrDefaultAsync();
-            if (gym == null) return NotFound(new ApiResponse(404, "this Gym doesnt exist"));
-            var gymGallery = await _context.TblGymGalleries.Where(x => x.Gymid == gym.GymId).ToListAsync();
-            var gymGalleryDto = _mapper.Map<IEnumerable<GetGymGallery>>(gymGallery);
+            var Gym = await _context.VwGyms.Where(x => x.GymId == GymId).FirstOrDefaultAsync();
+            if (Gym == null) return NotFound(new ApiResponse(404, "this Gym doesnt exist"));
+            var gymDto = _mapper.Map<GetGym>(Gym);
+            var gymGallery = await _context.TblGymGalleries.Where(x => x.Gymid == Gym.GymId).ToListAsync();
 
-            return Ok(gymGalleryDto);
+
+            gymDto.GymGallery = gymGallery != null ? _mapper.Map<List<GetGymGallery>>(gymGallery) : null;
+
+            return Ok(gymDto);
         }
     }
 }

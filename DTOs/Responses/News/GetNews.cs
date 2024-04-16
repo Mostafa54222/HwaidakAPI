@@ -61,5 +61,7 @@
         public string HotelNameSys { get; set; }
 
         public string HotelUrl { get; set; }
+
+        public List<GetNewsGallery> NewsGallery { get; set; }
     }
 }

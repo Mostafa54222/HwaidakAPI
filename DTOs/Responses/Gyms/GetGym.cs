@@ -47,5 +47,6 @@ namespace HwaidakAPI.DTOs.Responses.Gyms
         public string LanguageFlag { get; set; }
 
         public string LanguageAbbreviation { get; set; }
+        public List<GetGymGallery> GymGallery { get; set; }
     }
 }
