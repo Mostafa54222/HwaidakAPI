@@ -52,6 +52,19 @@ namespace HwaidakAPI.Controllers
 
             return Ok(gymDto);
         }
+        [HttpGet("GetGym/{GymId}")]
+        public async Task<ActionResult<IEnumerable<GetGym>>> GetGym(int GymId)
+        {
+            var Gym = await _context.VwGyms.Where(x => x.GymId == GymId).FirstOrDefaultAsync();
+            if (Gym == null) return NotFound(new ApiResponse(404, "this Gym doesnt exist"));
+            var gymDto = _mapper.Map<GetGym>(Gym);
+            var gymGallery = await _context.TblGymGalleries.Where(x => x.Gymid == Gym.GymId).ToListAsync();
+
+
+            gymDto.GymGallery = gymGallery != null ? _mapper.Map<List<GetGymGallery>>(gymGallery) : null;
+
+            return Ok(gymDto);
+        }
 
         [HttpGet("GetGymServices/{languageCode}")]
         public async Task<ActionResult<IEnumerable<GetGymService>>> GetGymServices(string languageCode = "en")
@@ -64,18 +77,5 @@ namespace HwaidakAPI.Controllers
             return Ok(gymServiceDto);
         }
 
-        [HttpGet("GetGym/{GymId}")]
-        public async Task<ActionResult<IEnumerable<GetGym>>> GetGymGallery(int GymId)
-        {
-            var Gym = await _context.VwGyms.Where(x => x.GymId == GymId).FirstOrDefaultAsync();
-            if (Gym == null) return NotFound(new ApiResponse(404, "this Gym doesnt exist"));
-            var gymDto = _mapper.Map<GetGym>(Gym);
-            var gymGallery = await _context.TblGymGalleries.Where(x => x.Gymid == Gym.GymId).ToListAsync();
-
-
-            gymDto.GymGallery = gymGallery != null ? _mapper.Map<List<GetGymGallery>>(gymGallery) : null;
-
-            return Ok(gymDto);
-        }
     }
 }

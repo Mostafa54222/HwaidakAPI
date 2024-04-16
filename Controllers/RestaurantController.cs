@@ -36,7 +36,7 @@ namespace HwaidakAPI.Controllers
 
 
         [HttpGet("{languageCode}/{hotelUrl}")]
-        public async Task<ActionResult<IEnumerable<GetRoom>>> GetHotelRestaurants(string hotelUrl, string languageCode = "en")
+        public async Task<ActionResult<IEnumerable<GetRestaurant>>> GetHotelRestaurants(string hotelUrl, string languageCode = "en")
         {
             var hotel = await _context.Hotels.Where(x => x.HotelUrl == hotelUrl).FirstOrDefaultAsync();
             if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
@@ -47,7 +47,7 @@ namespace HwaidakAPI.Controllers
 
             var restaurants = await _context.VwRestaurants.Where(x => x.HotelId == hotel.HotelId).ToListAsync();
 
-            var restaurantDto = _mapper.Map<IEnumerable<GetRoom>>(restaurants);
+            var restaurantDto = _mapper.Map<IEnumerable<GetRestaurant>>(restaurants);
 
 
             return Ok(restaurantDto);
