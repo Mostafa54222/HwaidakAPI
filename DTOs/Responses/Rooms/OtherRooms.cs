@@ -1,8 +1,6 @@
-﻿using HwaidakAPI.Models;
-
-namespace HwaidakAPI.DTOs.Responses.Rooms
+﻿namespace HwaidakAPI.DTOs.Responses.Rooms
 {
-    public class GetRoomDetails
+    public class OtherRooms
     {
         public int RoomId { get; set; }
 
@@ -87,12 +85,5 @@ namespace HwaidakAPI.DTOs.Responses.Rooms
         public string RoomBannerMobileColorOverlayTo { get; set; }
 
         public string Fb360url { get; set; }
-
-
-        public GetRoomContent RoomContents { get; set; }
-
-        public List<GetRoomGallery> RoomsGalleries { get; set; }
-        public List<GetRoomAmenity> RoomAmenities { get; set; }
-        public List<OtherRooms> OtherRooms { get; set; }
     }
 }

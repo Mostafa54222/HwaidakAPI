@@ -16,6 +16,7 @@ namespace HwaidakAPI.Helpers.Profiles.Rooms
             CreateMap<RoomsGallery, GetRoomGallery>();
             CreateMap<VwRoomsAmenity, GetRoomAmenity>();
 
+            CreateMap<Room, OtherRooms>();
 
 
             CreateMap<Room, GetRoomDetails>()

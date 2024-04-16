@@ -93,7 +93,7 @@ namespace HwaidakAPI.Controllers
             roomDto.RoomAmenities = roomam != null ? _mapper.Map<List<GetRoomAmenity>>(roomam) : null;
 
 
-            roomDto.OtherRooms = otherRooms != null ? _mapper.Map<List<GetRoom>>(otherRooms) : null;
+            roomDto.OtherRooms = otherRooms != null ? _mapper.Map<List<OtherRooms>>(otherRooms) : null;
 
 
 
