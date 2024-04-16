@@ -22,6 +22,7 @@
         public string HotelEmail { get; set; }
 
         public GetHotelContent HotelContent { get; set; }
+        public List<GetHotelGallery> HotelGallery { get; set; }
 
     }
 }
