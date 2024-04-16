@@ -48,5 +48,26 @@ namespace HwaidakAPI.Controllers
 
             return Ok(siteSocailsDto);
         }
+
+        [HttpGet("GetPages/{languageCode}")]
+        public async Task<ActionResult<IEnumerable<GetPages>>> GetPages(string languageCode = "en")
+        {
+            var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
+            if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
+            var pages = await _context.VwPages.Where(x => x.LangId == language.LangId).ToListAsync();
+            var pagesDto = _mapper.Map<IEnumerable<GetPages>>(pages);
+
+            return Ok(pagesDto);
+        }
+
+        [HttpGet("GetPageBanners/{PageID}")]
+        public async Task<ActionResult<IEnumerable<GetPages>>> GetPageBanners(int PageID)
+        {
+            var pageBanners = await _context.TblPagesBanners.Where(x => x.PageId == PageID).ToListAsync();
+            var pagesDto = _mapper.Map<IEnumerable<GetPageBanner>>(pageBanners);
+
+            return Ok(pagesDto);
+        }
+
     }
 }

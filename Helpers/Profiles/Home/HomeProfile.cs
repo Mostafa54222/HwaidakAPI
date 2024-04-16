@@ -12,6 +12,9 @@ namespace HwaidakAPI.Helpers.Profiles.Home
 
             CreateMap<TblSiteSocial, GetSiteSocials>();
             CreateMap<TblSiteContact, GetSiteContacts>();
+
+            CreateMap<VwPage, GetPages>();
+            CreateMap<TblPagesBanner, GetPageBanner>();
         }
     }
 }
