@@ -9,6 +9,7 @@ namespace HwaidakAPI.Helpers.Profiles.Home
         public HomeProfile()
         {
             CreateMap<TblSlider, GetSliders>();
+            CreateMap<VwHomeWhyU, GetHomeWhyUs>();
         }
     }
 }
