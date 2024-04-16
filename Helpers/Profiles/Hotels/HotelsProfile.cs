@@ -9,6 +9,7 @@ namespace HwaidakAPI.Helpers.Profiles.Hotels
         public HotelsProfile()
         {
             CreateMap<Hotel, GetHotel>();
+            CreateMap<VwGallery, GetHotelGallery>();
             CreateMap<HotelsContent, GetHotelContent>();
             CreateMap<VwHotelsFacility, GetHotelFacilities>();
             CreateMap<VwHotelsFacilitiesGallery, GetFacilitiyGallery>();
