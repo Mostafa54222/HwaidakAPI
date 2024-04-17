@@ -10,6 +10,7 @@ namespace HwaidakAPI.Helpers.Profiles.MeetingEvent
         {
             CreateMap<VwMeetingsEvent, GetMeetingEvent>();
             CreateMap<VwMeetingsEventsGallery, GetMeetingEventsGallery>();
+            CreateMap<VwHotel, GetMeetingEventWithPageDetails>();
         }
     }
 }
