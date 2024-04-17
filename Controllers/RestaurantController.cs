@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HwaidakAPI.DTOs;
 using HwaidakAPI.DTOs.Responses.Restaurants;
 using HwaidakAPI.DTOs.Responses.Rooms;
 using HwaidakAPI.Errors;
@@ -19,26 +20,10 @@ namespace HwaidakAPI.Controllers
         }
 
 
-
-
-        [HttpGet("{languageCode}")]
-        public async Task<ActionResult<IEnumerable<GetRestaurant>>> GetRestaurants(string languageCode = "en")
-        {
-            var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
-            if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
-            var restaurants = await _context.VwRestaurants.Where(x => x.LangId == language.LangId).ToListAsync();
-
-
-            var restaurantDto = _mapper.Map<IEnumerable<GetRestaurant>>(restaurants);
-
-            return Ok(restaurantDto);
-        }
-
-
         [HttpGet("{languageCode}/{hotelUrl}")]
-        public async Task<ActionResult<IEnumerable<GetRestaurant>>> GetHotelRestaurants(string hotelUrl, string languageCode = "en")
+        public async Task<ActionResult<GetRestaurantsList>> GetHotelRestaurants(string hotelUrl, string languageCode = "en")
         {
-            var hotel = await _context.Hotels.Where(x => x.HotelUrl == hotelUrl).FirstOrDefaultAsync();
+            var hotel = await _context.VwHotels.Where(x => x.HotelUrl == hotelUrl).FirstOrDefaultAsync();
             if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
 
             var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
@@ -47,7 +32,49 @@ namespace HwaidakAPI.Controllers
 
             var restaurants = await _context.VwRestaurants.Where(x => x.HotelId == hotel.HotelId).ToListAsync();
 
-            var restaurantDto = _mapper.Map<IEnumerable<GetRestaurant>>(restaurants);
+            var restaurantDto = _mapper.Map<List<GetRestaurant>>(restaurants);
+
+
+            MainResponse pagedetails = new MainResponse
+            {
+                PageTitle = hotel.HotelDiningTitle,
+                PageBannerPC = hotel.HotelDiningBanner,
+                PageBannerMobile = hotel.HotelDiningBannerMobile,
+                PageBannerTablet = hotel.HotelDiningBannerTablet,
+                PageText = hotel.HotelDining,
+                PageMetatagTitle = hotel.HotelDiningMetatagTitle,
+                PageMetatagDescription = hotel.HotelDiningMetatagDescription
+            };
+
+            GetRestaurantsList model = new GetRestaurantsList
+            {
+                PageDetails = pagedetails,
+                RestauransList = restaurantDto
+            };
+
+            return Ok(model);
+        }
+
+
+        [HttpGet("RestaurantDetails/{languageCode}/{hotelUrl}/{restaurantUrl}")]
+        public async Task<ActionResult<GetRestaurantDetails>> GetRestaurantDetails(string hotelUrl, string restaurantUrl, string languageCode = "en")
+        {
+
+            var hotel = await _context.Hotels.Where(x => x.HotelUrl == hotelUrl).FirstOrDefaultAsync();
+            if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
+
+            var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
+            if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
+
+
+            var restaurantdetails = await _context.VwRestaurants.Where(x => x.HotelId == hotel.HotelId && x.RestaurantUrl == restaurantUrl && x.LangId == language.LangId && x.RestaurantStatus == true).FirstOrDefaultAsync();
+            var restaurantgallery = await _context.VwRestaurantsGalleries.Where(x => x.RestaurantId == restaurantdetails.RestaurantId && x.PhotoStatus == true).ToListAsync();
+            var otherrestaurant = await _context.VwRestaurants.Where(x => x.HotelId == hotel.HotelId && x.RestaurantUrl != restaurantUrl && x.RestaurantStatus == true).ToListAsync();
+            var restaurantDto = _mapper.Map<GetRestaurantDetails>(restaurantdetails);
+
+
+            restaurantDto.OtherRestaurants = otherrestaurant != null ? _mapper.Map<List<GetRestaurant>>(otherrestaurant) : null;
+
 
 
             return Ok(restaurantDto);

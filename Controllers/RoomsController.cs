@@ -13,10 +13,13 @@ namespace HwaidakAPI.Controllers
     {
         private readonly HwaidakHotelsWsdbContext _context;
         private readonly IMapper _mapper;
-        public RoomsController(HwaidakHotelsWsdbContext context, IMapper mapper)
+        private readonly IConfiguration _configuration;
+
+        public RoomsController(HwaidakHotelsWsdbContext context, IMapper mapper, IConfiguration configuration)
         {
             _context = context;
             _mapper = mapper;
+            _configuration = configuration;
         }
 
 
@@ -67,7 +70,7 @@ namespace HwaidakAPI.Controllers
             if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
 
 
-            var roomdetails = await _context.VwRooms.Where(x => x.HotelId == hotel.HotelId && x.RoomUrl != roomUrl &&  x.LangId == language.LangId && x.RoomStatus == true).FirstOrDefaultAsync();
+            var roomdetails = await _context.VwRooms.Where(x => x.HotelId == hotel.HotelId && x.RoomUrl == roomUrl &&  x.LangId == language.LangId && x.RoomStatus == true).FirstOrDefaultAsync();
             var roomam = await _context.VwRoomsAmenities.Where(x => x.RoomId == roomdetails.RoomId && x.LangId == language.LangId && x.RoomAmenitiesStatus == true).ToListAsync();
             var roomgallery = await _context.VwRoomsGalleries.Where(x => x.RoomId == roomdetails.RoomId && x.PhotoStatus == true).ToListAsync();
             var otherrooms = await _context.VwRooms.Where(x => x.HotelId == hotel.HotelId && x.RoomUrl != roomUrl && x.RoomStatus == true).ToListAsync();
