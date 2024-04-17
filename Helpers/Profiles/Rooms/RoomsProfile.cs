@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HwaidakAPI.DTOs;
 using HwaidakAPI.DTOs.Responses.Rooms;
 using HwaidakAPI.Models;
 
@@ -8,9 +9,8 @@ namespace HwaidakAPI.Helpers.Profiles.Rooms
     {
         public RoomsProfile()
         {
-            CreateMap<Room, GetRoom>()
-                .ForMember(dest => dest.RoomContents, opt => opt.MapFrom(src => src.RoomsContents.FirstOrDefault()))
-                .ForMember(dest => dest.RoomsGalleries, opt => opt.MapFrom(src => src.RoomsGalleries.ToList()));
+
+            CreateMap<Room, GetRoom>();
 
             CreateMap<RoomsContent, GetRoomContent>();
             CreateMap<RoomsGallery, GetRoomGallery>();
@@ -20,8 +20,14 @@ namespace HwaidakAPI.Helpers.Profiles.Rooms
 
 
             CreateMap<Room, GetRoomDetails>()
-                .ForMember(dest => dest.RoomContents, opt => opt.MapFrom(src => src.RoomsContents.FirstOrDefault()))
                 .ForMember(dest => dest.RoomsGalleries, opt => opt.MapFrom(src => src.RoomsGalleries.ToList()));
+
+
+
+            CreateMap<VwHotel, MainResponse>();
+            CreateMap<VwRoom, GetRoom>();
+
+            CreateMap<VwRoom, GetRoomDetails>();
         }
     }
 }
