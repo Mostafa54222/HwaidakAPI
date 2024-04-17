@@ -9,6 +9,7 @@ namespace HwaidakAPI.Helpers.Profiles.MeetingEvent
         public MeetingEvent()
         {
             CreateMap<VwMeetingsEvent, GetMeetingEvent>();
+            CreateMap<VwMeetingsEvent, GetMeetingEventsDetails>();
             CreateMap<VwMeetingsEventsGallery, GetMeetingEventsGallery>();
             CreateMap<VwHotel, GetMeetingEventWithPageDetails>();
         }
