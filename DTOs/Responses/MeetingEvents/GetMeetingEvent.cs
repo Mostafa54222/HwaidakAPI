@@ -2,6 +2,7 @@
 {
     public class GetMeetingEvent
     {
+
         public int FacilityId { get; set; }
 
         public int? HotelId { get; set; }

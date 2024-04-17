@@ -7,8 +7,6 @@
         public string HotelMeetingMetatagTitle { get; set; }
         public string HotelMeetingMetatagDescription { get; set; }
         public string HotelMeetingBanner { get; set; }
-        public int? HotelMeetingBannerWidth { get; set; }
-        public int? HotelMeetingBannerHieght { get; set; }
         public string HotelMeetingBannerTablet { get; set; }
         public string HotelMeetingBannerMobile { get; set; }
         public string HotelMeetingThanksBannerTablet { get; set; }
