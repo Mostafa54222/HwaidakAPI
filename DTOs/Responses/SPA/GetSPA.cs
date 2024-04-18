@@ -12,7 +12,6 @@
 
         public string FacilityBanner { get; set; }
 
-        public bool? FacilityStatus { get; set; }
 
 
         public string FacilityName { get; set; }
@@ -25,7 +24,6 @@
 
         public string MetatagDescription { get; set; }
 
-        public string LanguageAbbreviation { get; set; }
 
         public string OpeningHours { get; set; }
 
