@@ -27,14 +27,9 @@ namespace HwaidakAPI.Controllers
         [HttpGet("{languageCode}/{hotelUrl}")]
         public async Task<ActionResult<IEnumerable<GetNewsList>>> GetHotelNews(string hotelUrl, string languageCode = "en")
         {
-            var hotel = await _context.Hotels.Where(x => x.HotelUrl == hotelUrl && x.HotelStatus == true).FirstOrDefaultAsync();
-            if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
-
-            var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
-            if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
 
 
-            var News = await _context.VwNews.Where(x => x.HotelId == hotel.HotelId &&x.NewsStatus==true&&x.IsDeleted==false).ToListAsync();
+            var News = await _context.VwNews.Where(x => x.HotelUrl == hotelUrl && x.LanguageAbbreviation == languageCode && x.NewsStatus==true&&x.IsDeleted==false).ToListAsync();
 
             var NewsDto = _mapper.Map<IEnumerable<GetNewsList>>(News);
 
@@ -45,9 +40,7 @@ namespace HwaidakAPI.Controllers
         [HttpGet("GetHotelNews/{languageCode}/{HotelUrl}/{NewsUrl}")]
         public async Task<ActionResult<GetNewsDetails>> GetHotelNews(string HotelUrl, string NewsUrl, string languageCode = "en")
         {
-            var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
-            if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
-            var News = await _context.VwNews.Where(x => x.NewsUrl == NewsUrl && x.HotelUrl == HotelUrl && x.NewsStatus == true).FirstOrDefaultAsync();
+            var News = await _context.VwNews.Where(x => x.NewsUrl == NewsUrl && x.LanguageAbbreviation == languageCode && x.HotelUrl == HotelUrl && x.NewsStatus == true).FirstOrDefaultAsync();
             if (News == null) return NotFound(new ApiResponse(404, "this New doesnt exist"));
             var NewsGallery = await _context.TblNewsGalleries.Where(x => x.NewsId == News.NewsId &&x.PhotoStatus==true).ToListAsync();
             var NewsDto = _mapper.Map<GetNewsDetails>(News);

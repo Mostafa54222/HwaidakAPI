@@ -27,9 +27,7 @@ namespace HwaidakAPI.Controllers
         [HttpGet("{languageCode}")]
         public async Task<ActionResult<IEnumerable<GetMeetingEvent>>> GetMeetingEvents(string languageCode = "en")
         {
-            var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
-            if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
-            var meetingEvent = await _context.VwMeetingsEvents.Where(x => x.LangId == language.LangId &&x.FacilityStatus==true &&x.IsDeleted==false).ToListAsync();
+            var meetingEvent = await _context.VwMeetingsEvents.Where(x => x.LanguageAbbreviation == languageCode && x.FacilityStatus==true && x.IsDeleted==false).ToListAsync();
             var meetingEventDto = _mapper.Map<IEnumerable<GetMeetingEvent>>(meetingEvent);
             return Ok(meetingEventDto);
         }
@@ -40,9 +38,6 @@ namespace HwaidakAPI.Controllers
         {
             var hotel = await _context.VwHotels.Where(x => x.HotelUrl == hotelUrl && x.HotelStatus == true).FirstOrDefaultAsync();
             if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
-
-            var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
-            if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
 
             // to do the phone and email
 
@@ -58,7 +53,7 @@ namespace HwaidakAPI.Controllers
                 PageMetatagDescription = hotel.HotelMeetingMetatagDescription
             };
 
-            var meetingEvent = await _context.VwMeetingsEvents.Where(x => x.HotelId == hotel.HotelId && x.LangId == language.LangId && x.FacilityStatus == true).OrderBy(x => x.FacilityPosition).ToListAsync();
+            var meetingEvent = await _context.VwMeetingsEvents.Where(x => x.HotelId == hotel.HotelId && x.LanguageAbbreviation == languageCode && x.FacilityStatus == true).OrderBy(x => x.FacilityPosition).ToListAsync();
             var meetingEventDto = _mapper.Map<List<GetMeetingEvent>>(meetingEvent);
             GetMeetingEventWithPageDetails model = new GetMeetingEventWithPageDetails
             {
@@ -73,17 +68,14 @@ namespace HwaidakAPI.Controllers
         public async Task<ActionResult<IEnumerable<GetMeetingEventsDetails>>> GetMeetingEventsDetails(string hotelUrl, string FacilityUrl, string languageCode = "en")
         {
 
-            var hotel = await _context.VwHotels.Where(x => x.HotelUrl == hotelUrl && x.HotelStatus == true).FirstOrDefaultAsync();
+            var hotel = await _context.VwHotels.Where(x => x.HotelUrl == hotelUrl && x.HotelStatus == true && x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
 
-            var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
-            if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
 
-
-            var meetingEvent = await _context.VwMeetingsEvents.Where(x => x.FacilityStatus == true && x.FacilityUrl == FacilityUrl && x.HotelId == hotel.HotelId && x.LangId == language.LangId).OrderBy(x => x.FacilityPosition).FirstOrDefaultAsync();
+            var meetingEvent = await _context.VwMeetingsEvents.Where(x => x.LanguageAbbreviation == languageCode && x.FacilityStatus == true && x.FacilityUrl == FacilityUrl && x.HotelId == hotel.HotelId).OrderBy(x => x.FacilityPosition).FirstOrDefaultAsync();
             var meetingEventDto = _mapper.Map<GetMeetingEventsDetails>(meetingEvent);
             var meetingEventGallery = await _context.VwMeetingsEventsGalleries.Where(x => x.FacilitiesId == meetingEvent.FacilityId).ToListAsync();
-            var otherMeetingEvents = await _context.VwMeetingsEvents.Where(x => x.FacilityUrl != FacilityUrl && x.HotelId == hotel.HotelId && x.FacilityStatus == true).OrderBy(x => x.FacilityPosition).ToListAsync();
+            var otherMeetingEvents = await _context.VwMeetingsEvents.Where(x => x.LanguageAbbreviation == languageCode && x.FacilityUrl != FacilityUrl && x.HotelId == hotel.HotelId && x.FacilityStatus == true).OrderBy(x => x.FacilityPosition).ToListAsync();
             var meetingEventGallerydto = _mapper.Map<List<GetMeetingEventsGallery>>(meetingEventGallery);
 
 
