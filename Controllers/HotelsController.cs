@@ -62,16 +62,16 @@ namespace HwaidakAPI.Controllers
 
         }
 
-        [HttpGet("GetHotelFacilitiesGallery/{FacilityID}")]
-        public async Task<ActionResult<IEnumerable<GetFacilitiyGallery>>> GetHotelFacilitiesGallery(int FacilityID)
-        {
-            var facility = await _context.Facilities.Where(x => x.FacilityId == FacilityID).FirstOrDefaultAsync();
-            if (facility == null) return NotFound(new ApiResponse(404, "there is no facility with this name"));
-            var hotelFacilitiesGallery = await _context.VwHotelsFacilitiesGalleries.Where(x => x.FacilitiesId == facility.FacilityId).ToListAsync();
-            var hotelFacilityGalleryDto = _mapper.Map<IEnumerable<GetFacilitiyGallery>>(hotelFacilitiesGallery);
-            return Ok(hotelFacilityGalleryDto);
+        //[HttpGet("GetHotelFacilitiesGallery/{FacilityID}")]
+        //public async Task<ActionResult<IEnumerable<GetFacilitiyGallery>>> GetHotelFacilitiesGallery(int FacilityID)
+        //{
+        //    var facility = await _context.Facilities.Where(x => x.FacilityId == FacilityID).FirstOrDefaultAsync();
+        //    if (facility == null) return NotFound(new ApiResponse(404, "there is no facility with this ID"));
+        //    var hotelFacilitiesGallery = await _context.VwHotelsFacilitiesGalleries.Where(x => x.FacilitiesId == facility.FacilityId).ToListAsync();
+        //    var hotelFacilityGalleryDto = _mapper.Map<IEnumerable<GetFacilitiyGallery>>(hotelFacilitiesGallery);
+        //    return Ok(hotelFacilityGalleryDto);
 
-        }
+        //}
 
     }
 }
