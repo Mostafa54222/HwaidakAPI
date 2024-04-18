@@ -16,6 +16,7 @@ namespace HwaidakAPI.Helpers.Profiles.Home
             CreateMap<VwPage, GetPages>();
             CreateMap<TblPagesBanner, GetPageBanner>();
             CreateMap<VwHomeWhyU, GetHomeWhyUs>();
+            CreateMap<VwHotel, GetHotelHome>();
         }
     }
 }

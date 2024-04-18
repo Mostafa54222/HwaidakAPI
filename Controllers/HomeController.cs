@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HwaidakAPI.DTOs.Responses.Home;
 using HwaidakAPI.DTOs.Responses.Hotels;
+using HwaidakAPI.DTOs.Responses.News;
 using HwaidakAPI.DTOs.Responses.SPA;
 using HwaidakAPI.Errors;
 using HwaidakAPI.Models;
@@ -34,10 +35,18 @@ namespace HwaidakAPI.Controllers
             var siteSocails = await _context.TblSiteSocials.ToListAsync();
             var siteSocailsDto = _mapper.Map<List<GetSiteSocials>>(siteSocails);
 
+            var News = await _context.VwNews.ToListAsync();
+            var NewsDto = _mapper.Map<List<GetNewsList>>(News);
+
+            var hotels = await _context.VwHotels.Where(x=>x.LangId==language.LangId).ToListAsync();
+            var hotelDtos = _mapper.Map<List<GetHotelHome>>(hotels);
+
             var getWholeHomePageDto = new GetWholeHomePage();
             getWholeHomePageDto.Sliders = slidersDto;
             getWholeHomePageDto.SiteContacts = siteContactsDto;
             getWholeHomePageDto.SiteSocials = siteSocailsDto;
+            getWholeHomePageDto.News = NewsDto;
+            getWholeHomePageDto.Hotels = hotelDtos;
             
 
             return Ok(getWholeHomePageDto);
