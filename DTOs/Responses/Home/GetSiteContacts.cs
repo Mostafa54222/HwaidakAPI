@@ -2,10 +2,7 @@
 {
     public class GetSiteContacts
     {
-        public int ContactId { get; set; }
-
-        public int? LangId { get; set; }
-
+        
         public string SiteTel { get; set; }
 
         public string SiteFax { get; set; }
