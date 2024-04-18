@@ -26,7 +26,7 @@ namespace HwaidakAPI.Controllers
             var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
 
-            var sliders = await _context.TblSliders.Where(x => x.LangId == language.LangId).ToListAsync();
+            var sliders = await _context.TblSliders.Where(x => x.LangId == language.LangId &&x.SliderStatus==true &&x.IsDeleted==false).ToListAsync();
             var slidersDto = _mapper.Map<List<GetSliders>>(sliders);
 
             var siteContacts = await _context.TblSiteContacts.Where(x => x.LangId == language.LangId).ToListAsync();
@@ -38,7 +38,7 @@ namespace HwaidakAPI.Controllers
             var News = await _context.VwNews.ToListAsync();
             var NewsDto = _mapper.Map<List<GetNewsList>>(News);
 
-            var hotels = await _context.VwHotels.Where(x=>x.LangId==language.LangId).ToListAsync();
+            var hotels = await _context.VwHotels.Where(x=>x.LangId==language.LangId &&x.HotelStatus==true).ToListAsync();
             var hotelDtos = _mapper.Map<List<GetHotelHome>>(hotels);
 
             var getWholeHomePageDto = new GetWholeHomePage();

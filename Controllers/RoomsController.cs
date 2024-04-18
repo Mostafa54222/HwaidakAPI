@@ -27,14 +27,14 @@ namespace HwaidakAPI.Controllers
         [HttpGet("{languageCode}/{hotelUrl}")]
         public async Task<ActionResult<GetRoomsList>> GetHotelRooms(string hotelUrl, string languageCode = "en")
         {
-            var hotel = await _context.VwHotels.Where(x => x.HotelUrl == hotelUrl).FirstOrDefaultAsync();
+            var hotel = await _context.VwHotels.Where(x => x.HotelUrl == hotelUrl && x.HotelStatus == true).FirstOrDefaultAsync();
             if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
 
             var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
 
 
-            var rooms = await _context.VwRooms.Where(x => x.HotelId == hotel.HotelId && x.RoomStatus == true).ToListAsync();
+            var rooms = await _context.VwRooms.Where(x => x.HotelId == hotel.HotelId && x.RoomStatus == true &&x.IsDeleted==false).ToListAsync();
 
             var roomDto = _mapper.Map<List<GetRoom>>(rooms);
 
@@ -63,17 +63,17 @@ namespace HwaidakAPI.Controllers
         public async Task<ActionResult<GetRoomDetails>> GetRoomDetails(string hotelUrl, string roomUrl, string languageCode = "en")
         {
 
-            var hotel = await _context.Hotels.Where(x => x.HotelUrl == hotelUrl).FirstOrDefaultAsync();
+            var hotel = await _context.Hotels.Where(x => x.HotelUrl == hotelUrl &&x.HotelStatus==true).FirstOrDefaultAsync();
             if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
 
             var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
 
 
-            var roomdetails = await _context.VwRooms.Where(x => x.HotelId == hotel.HotelId && x.RoomUrl == roomUrl &&  x.LangId == language.LangId && x.RoomStatus == true).FirstOrDefaultAsync();
+            var roomdetails = await _context.VwRooms.Where(x => x.HotelId == hotel.HotelId && x.RoomUrl == roomUrl &&  x.LangId == language.LangId && x.RoomStatus == true &&x.IsDeleted==false).FirstOrDefaultAsync();
             var roomam = await _context.VwRoomsAmenities.Where(x => x.RoomId == roomdetails.RoomId && x.LangId == language.LangId && x.RoomAmenitiesStatus == true).ToListAsync();
             var roomgallery = await _context.VwRoomsGalleries.Where(x => x.RoomId == roomdetails.RoomId && x.PhotoStatus == true).ToListAsync();
-            var otherrooms = await _context.VwRooms.Where(x => x.HotelId == hotel.HotelId && x.RoomUrl != roomUrl && x.RoomStatus == true).ToListAsync();
+            var otherrooms = await _context.VwRooms.Where(x => x.HotelId == hotel.HotelId && x.RoomUrl != roomUrl && x.RoomStatus == true && x.IsDeleted == false).ToListAsync();
             var roomDto = _mapper.Map<GetRoomDetails>(roomdetails);
 
 

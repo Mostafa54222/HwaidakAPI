@@ -29,7 +29,7 @@ namespace HwaidakAPI.Controllers
         {
             var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
-            var meetingEvent = await _context.VwMeetingsEvents.Where(x => x.LangId == language.LangId).ToListAsync();
+            var meetingEvent = await _context.VwMeetingsEvents.Where(x => x.LangId == language.LangId &&x.FacilityStatus==true &&x.IsDeleted==false).ToListAsync();
             var meetingEventDto = _mapper.Map<IEnumerable<GetMeetingEvent>>(meetingEvent);
             return Ok(meetingEventDto);
         }
@@ -38,7 +38,7 @@ namespace HwaidakAPI.Controllers
         [HttpGet("{languageCode}/{hotelUrl}")]
         public async Task<ActionResult<IEnumerable<GetMeetingEventWithPageDetails>>> GetMeetingEventsByHotel(string hotelUrl, string languageCode = "en")
         {
-            var hotel = await _context.VwHotels.Where(x => x.HotelUrl == hotelUrl).FirstOrDefaultAsync();
+            var hotel = await _context.VwHotels.Where(x => x.HotelUrl == hotelUrl && x.HotelStatus == true).FirstOrDefaultAsync();
             if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
 
             var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
@@ -73,7 +73,7 @@ namespace HwaidakAPI.Controllers
         public async Task<ActionResult<IEnumerable<GetMeetingEventsDetails>>> GetMeetingEventsDetails(string hotelUrl, string FacilityUrl, string languageCode = "en")
         {
 
-            var hotel = await _context.VwHotels.Where(x => x.HotelUrl == hotelUrl).FirstOrDefaultAsync();
+            var hotel = await _context.VwHotels.Where(x => x.HotelUrl == hotelUrl && x.HotelStatus == true).FirstOrDefaultAsync();
             if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
 
             var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();

@@ -24,7 +24,7 @@ namespace HwaidakAPI.Controllers
         [HttpGet("{languageCode}")]
         public async Task<ActionResult<List<GetHotelList>>> GetHotels(string languageCode = "en")
         {
-            var hotels = await _context.VwHotels.ToListAsync();
+            var hotels = await _context.VwHotels.Where(x=>x.HotelStatus == true).ToListAsync();
 
             var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
