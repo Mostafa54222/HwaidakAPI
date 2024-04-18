@@ -19,16 +19,16 @@ namespace HwaidakAPI.Controllers
         }
 
 
-        [HttpGet("{languageCode}")]
-        public async Task<ActionResult<IEnumerable<GetSPA>>> GetSPA(string languageCode = "en")
-        {
-            var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
-            if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
-            var spas = await _context.VwSpas.Where(x => x.LangId == language.LangId).ToListAsync();
-            var spaDto = _mapper.Map<IEnumerable<GetSPA>>(spas);
+        //[HttpGet("{languageCode}")]
+        //public async Task<ActionResult<IEnumerable<GetSPA>>> GetSPA(string languageCode = "en")
+        //{
+        //    var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
+        //    if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
+        //    var spas = await _context.VwSpas.Where(x => x.LangId == language.LangId).ToListAsync();
+        //    var spaDto = _mapper.Map<IEnumerable<GetSPA>>(spas);
 
-            return Ok(spaDto);
-        }
+        //    return Ok(spaDto);
+        //}
 
 
         [HttpGet("{languageCode}/{hotelUrl}")]
@@ -41,15 +41,15 @@ namespace HwaidakAPI.Controllers
             if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
 
 
-            var spas = await _context.VwSpas.Where(x => x.HotelId == hotel.HotelId && x.LangId == language.LangId).ToListAsync();
+            var spas = await _context.VwSpas.Where(x => x.HotelId == hotel.HotelId && x.LangId == language.LangId && x.FacilityStatus == true).OrderBy(x => x.FacilityPosition).ToListAsync();
 
             var spaDto = _mapper.Map<IEnumerable<GetSPA>>(spas);
 
 
             return Ok(spaDto);
         }
-        [HttpGet("GetSPA/{hotelUrl}/{SPAID}")]
-        public async Task<ActionResult<IEnumerable<GetSPADetails>>> GetSPA(string hotelUrl,  int SPAID, string languageCode = "en")
+        [HttpGet("GetSPA/{hotelUrl}/{SPAUrl}")]
+        public async Task<ActionResult<IEnumerable<GetSPADetails>>> GetSPA(string hotelUrl,  string SPAUrl, string languageCode = "en")
         {
 
             var hotel = await _context.Hotels.Where(x => x.HotelUrl == hotelUrl).FirstOrDefaultAsync();
@@ -58,7 +58,7 @@ namespace HwaidakAPI.Controllers
             var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
 
-            var spa = await _context.VwSpas.Where(x => x.HotelId == hotel.HotelId && x.SpaId == SPAID && x.LangId == language.LangId).FirstOrDefaultAsync();
+            var spa = await _context.VwSpas.Where(x => x.HotelId == hotel.HotelId && x.FacilityUrl == SPAUrl && x.LangId == language.LangId && x.FacilityStatus == true).FirstOrDefaultAsync();
             if (spa == null) return NotFound(new ApiResponse(404, "this SPA doesnt exist"));
             var spaDto = _mapper.Map<GetSPADetails>(spa);
             var spaGallery = await _context.TblSpaGalleries.Where(x => x.Spaid == spa.SpaId).ToListAsync();
