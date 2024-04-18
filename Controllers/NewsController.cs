@@ -22,19 +22,10 @@ namespace HwaidakAPI.Controllers
 
 
 
-        [HttpGet("{languageCode}")]
-        public async Task<ActionResult<IEnumerable<GetNews>>> GetNews(string languageCode = "en")
-        {
-            var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
-            if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
-            var News = await _context.VwNews.Where(x => x.LangId == language.LangId).ToListAsync();
-            var NewsDto = _mapper.Map<IEnumerable<GetNews>>(News);
-            return Ok(NewsDto);
-        }
 
 
         [HttpGet("{languageCode}/{hotelUrl}")]
-        public async Task<ActionResult<IEnumerable<GetNews>>> GetHotelNews(string hotelUrl, string languageCode = "en")
+        public async Task<ActionResult<IEnumerable<GetNewsList>>> GetHotelNews(string hotelUrl, string languageCode = "en")
         {
             var hotel = await _context.Hotels.Where(x => x.HotelUrl == hotelUrl).FirstOrDefaultAsync();
             if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
@@ -45,21 +36,21 @@ namespace HwaidakAPI.Controllers
 
             var News = await _context.VwNews.Where(x => x.HotelId == hotel.HotelId).ToListAsync();
 
-            var NewsDto = _mapper.Map<IEnumerable<GetNews>>(News);
+            var NewsDto = _mapper.Map<IEnumerable<GetNewsList>>(News);
 
 
             return Ok(NewsDto);
         }
 
-        [HttpGet("GetHotelNews/{languageCode}/{NewsID}")]
-        public async Task<ActionResult<IEnumerable<GetNewsGallery>>> GetHotelNews(int NewsID, string languageCode = "en")
+        [HttpGet("GetHotelNews/{languageCode}/{HotelUrl}/{NewsUrl}")]
+        public async Task<ActionResult<GetNewsDetails>> GetHotelNews(string HotelUrl, string NewsUrl, string languageCode = "en")
         {
             var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
-            var News = await _context.VwNews.Where(x => x.NewsId == NewsID).FirstOrDefaultAsync();
+            var News = await _context.VwNews.Where(x => x.NewsUrl == NewsUrl && x.HotelUrl == HotelUrl && x.NewsStatus == true).FirstOrDefaultAsync();
             if (News == null) return NotFound(new ApiResponse(404, "this New doesnt exist"));
-            var NewsGallery = await _context.TblNewsGalleries.Where(x => x.NewsId == NewsID).ToListAsync();
-            var NewsDto = _mapper.Map<GetNews>(News);
+            var NewsGallery = await _context.TblNewsGalleries.Where(x => x.NewsId == News.NewsId).ToListAsync();
+            var NewsDto = _mapper.Map<GetNewsDetails>(News);
             
             NewsDto.NewsGallery = NewsGallery != null ? _mapper.Map<List<GetNewsGallery>>(NewsGallery) : null;
 

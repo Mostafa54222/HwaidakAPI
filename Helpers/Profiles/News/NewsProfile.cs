@@ -8,7 +8,8 @@ namespace HwaidakAPI.Helpers.Profiles.News
     {
         public NewsProfile()
         {
-            CreateMap<VwNews, GetNews>();
+            CreateMap<VwNews, GetNewsDetails>();
+            CreateMap<VwNews, GetNewsList>();
             CreateMap<TblNewsGallery,GetNewsGallery>();
         }
     }

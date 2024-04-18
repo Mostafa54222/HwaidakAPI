@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HwaidakAPI.DTOs.Responses.Gyms;
 using HwaidakAPI.DTOs.Responses.Hotels;
+using HwaidakAPI.DTOs.Responses.News;
 using HwaidakAPI.DTOs.Responses.Rooms;
 using HwaidakAPI.Errors;
 using HwaidakAPI.Models;
@@ -48,13 +49,14 @@ namespace HwaidakAPI.Controllers
             var hotelGallery = await _context.VwGalleries.Where(x => x.LangId == language.LangId && x.HotelId == hotel.HotelId && x.GalleryStatus == true).OrderBy(x => x.GalleryPosition).ToListAsync();
             var hotelfacilities = await _context.VwHotelsFacilities.Where(x => x.HotelId == hotel.HotelId && x.HotelFacilitiesItemStatus == true).OrderBy(x => x.HotelFacilitiesItemPosition).ToListAsync();
             var hotelRooms = await _context.VwRooms.Where(x => x.HotelId == hotel.HotelId && x.RoomStatus == true).OrderBy(x => x.RoomPosition).ToListAsync();
-
+            var hotelNews = await _context.VwNews.Where(x => x.HotelId == hotel.HotelId && x.NewsStatus == true).ToListAsync();
 
             var hotelDto = _mapper.Map<GetHotel>(hotel);
 
             hotelDto.HotelGallery = hotelGallery != null ? _mapper.Map<List<GetHotelGallery>>(hotelGallery) : null;
             hotelDto.HotelFacilities = hotelfacilities != null ? _mapper.Map<List<GetHotelFacilities>>(hotelfacilities) : null;
             hotelDto.HotelRooms = hotelRooms != null ? _mapper.Map<List<GetRoom>>(hotelRooms) : null;
+            hotelDto.HotelNews = hotelNews != null ? _mapper.Map<List<GetNewsList>>(hotelNews) : null;
 
             return Ok(hotelDto);
 

@@ -21,22 +21,8 @@ namespace HwaidakAPI.Controllers
         }
 
 
-
-
-        [HttpGet("{languageCode}")]
-        public async Task<ActionResult<IEnumerable<GetGym>>> GetGyms(string languageCode = "en")
-        {
-            var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
-            if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
-            var gyms = await _context.VwGyms.Where(x => x.LangId == language.LangId).ToListAsync();
-            var gymDto = _mapper.Map<IEnumerable<GetGym>>(gyms);
-
-            return Ok(gymDto);
-        }
-
-
         [HttpGet("{languageCode}/{hotelUrl}")]
-        public async Task<ActionResult<IEnumerable<GetGym>>> GetHotelGyms(string hotelUrl, string languageCode = "en")
+        public async Task<ActionResult<IEnumerable<GetGymList>>> GetHotelGyms(string hotelUrl, string languageCode = "en")
         {
             var hotel = await _context.Hotels.Where(x => x.HotelUrl == hotelUrl).FirstOrDefaultAsync();
             if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
@@ -45,21 +31,26 @@ namespace HwaidakAPI.Controllers
             if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
 
 
-            var Gyms = await _context.VwGyms.Where(x => x.HotelId == hotel.HotelId).ToListAsync();
+            var Gyms = await _context.VwGyms.Where(x => x.HotelId == hotel.HotelId && x.LangId == language.LangId).ToListAsync();
 
-            var gymDto = _mapper.Map<IEnumerable<GetGym>>(Gyms);
+            var gymDto = _mapper.Map<IEnumerable<GetGymList>>(Gyms);
 
 
             return Ok(gymDto);
         }
-        [HttpGet("GetGym/{GymId}")]
-        public async Task<ActionResult<IEnumerable<GetGym>>> GetGym(int GymId)
+        [HttpGet("GetGym/{languageCode}/{HotelUrl}/{GymUrl}")]
+        public async Task<ActionResult<IEnumerable<GetGym>>> GetGym(string HotelUrl, string GymUrl, string languageCode = "en")
         {
-            var Gym = await _context.VwGyms.Where(x => x.GymId == GymId).FirstOrDefaultAsync();
+            var hotel = await _context.Hotels.Where(x => x.HotelUrl == HotelUrl).FirstOrDefaultAsync();
+            if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
+            var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
+            if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
+
+            var Gym = await _context.VwGyms.Where(x => x.FacilityUrl == GymUrl && x.HotelId == hotel.HotelId && x.FacilityStatus == true && x.LangId == language.LangId).FirstOrDefaultAsync();
             if (Gym == null) return NotFound(new ApiResponse(404, "this Gym doesnt exist"));
             var gymDto = _mapper.Map<GetGym>(Gym);
             var gymGallery = await _context.TblGymGalleries.Where(x => x.Gymid == Gym.GymId).ToListAsync();
-
+            //var gymServices = await _context.VwGymServices.Where(x => x.)
 
             gymDto.GymGallery = gymGallery != null ? _mapper.Map<List<GetGymGallery>>(gymGallery) : null;
 

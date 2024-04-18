@@ -1,4 +1,5 @@
-﻿using HwaidakAPI.DTOs.Responses.Rooms;
+﻿using HwaidakAPI.DTOs.Responses.News;
+using HwaidakAPI.DTOs.Responses.Rooms;
 
 namespace HwaidakAPI.DTOs.Responses.Hotels
 {
@@ -10,7 +11,6 @@ namespace HwaidakAPI.DTOs.Responses.Hotels
         public string HotelOverview { get; set; }
 
         public string HotelUrl { get; set; }
-        public string HotelPmscode { get; set; }
 
         public string HotelPhoto { get; set; }
 
@@ -36,6 +36,7 @@ namespace HwaidakAPI.DTOs.Responses.Hotels
         public List<GetHotelGallery> HotelGallery { get; set; } = [];
         public List<GetRoom> HotelRooms { get; set; } = [];
         public List<GetHotelFacilities> HotelFacilities { get; set; } = [];
+        public List<GetNewsList> HotelNews { get; set; } = [];
 
     }
 }

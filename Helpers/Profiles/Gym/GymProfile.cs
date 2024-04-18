@@ -10,6 +10,7 @@ namespace HwaidakAPI.Helpers.Profiles.Gym
         public GymProfile()
         {
             CreateMap<VwGym, GetGym>();
+            CreateMap<VwGym, GetGymList>();
             CreateMap<VwGymService, GetGymService>();
             CreateMap<TblGymGallery, GetGymGallery>();
         }
