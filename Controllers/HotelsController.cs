@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HwaidakAPI.DTOs.Responses.Gyms;
 using HwaidakAPI.DTOs.Responses.Hotels;
+using HwaidakAPI.DTOs.Responses.Rooms;
 using HwaidakAPI.Errors;
 using HwaidakAPI.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -20,41 +21,40 @@ namespace HwaidakAPI.Controllers
         }
 
         [HttpGet("{languageCode}")]
-        public async Task<ActionResult<IEnumerable<GetHotel>>> GetHotels(string languageCode = "en")
+        public async Task<ActionResult<List<GetHotelList>>> GetHotels(string languageCode = "en")
         {
-            var hotels = await _context.Hotels.ToListAsync();
+            var hotels = await _context.VwHotels.ToListAsync();
 
             var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
-            var hotelsContent = await _context.HotelsContents.Where(x => x.LangId == language.LangId).ToListAsync();
-            if (hotelsContent == null) return NotFound(new ApiResponse(404, "there is no hotels with this language"));
 
 
-            var hotelDtos = _mapper.Map<IEnumerable<GetHotel>>(hotels);
-            foreach (var hotelDto in hotelDtos)
-            {
-                var content = hotelsContent.FirstOrDefault(x => x.HotelId == hotelDto.HotelId);
-                hotelDto.HotelContent = content != null ? _mapper.Map<GetHotelContent>(content) : null;
-            }
+            var hotelDtos = _mapper.Map<List<GetHotelList>>(hotels);
+
 
             return Ok(hotelDtos);
         }
 
         [HttpGet("{languageCode}/{hotelurl}")]
-        public async Task<ActionResult<IEnumerable<GetHotel>>> GetHotel(string hotelurl, string languageCode = "en")
+        public async Task<ActionResult<GetHotel>> GetHotel(string hotelurl, string languageCode = "en")
         {
-            var hotel = await _context.Hotels.Where(x => x.HotelUrl == hotelurl).FirstOrDefaultAsync();
+            var hotel = await _context.VwHotels.Where(x => x.HotelUrl == hotelurl && x.HotelStatus == true).FirstOrDefaultAsync();
             if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
-
-            var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
+            var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode && x.LangStatus == true).FirstOrDefaultAsync();
             if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
-            var hotelContent = await _context.HotelsContents.Where(x => x.LangId == language.LangId && x.HotelId == hotel.HotelId).FirstOrDefaultAsync();
-            var hotelGallery = await _context.VwGalleries.Where(x => x.LangId == language.LangId && x.HotelId == hotel.HotelId).ToListAsync();
+
+
+
+            var hotelGallery = await _context.VwGalleries.Where(x => x.LangId == language.LangId && x.HotelId == hotel.HotelId && x.GalleryStatus == true).OrderBy(x => x.GalleryPosition).ToListAsync();
+            var hotelfacilities = await _context.VwHotelsFacilities.Where(x => x.HotelId == hotel.HotelId && x.HotelFacilitiesItemStatus == true).OrderBy(x => x.HotelFacilitiesItemPosition).ToListAsync();
+            var hotelRooms = await _context.VwRooms.Where(x => x.HotelId == hotel.HotelId && x.RoomStatus == true).OrderBy(x => x.RoomPosition).ToListAsync();
+
 
             var hotelDto = _mapper.Map<GetHotel>(hotel);
-            hotelDto.HotelContent = hotelContent != null ? _mapper.Map<GetHotelContent>(hotelContent) : null;
 
             hotelDto.HotelGallery = hotelGallery != null ? _mapper.Map<List<GetHotelGallery>>(hotelGallery) : null;
+            hotelDto.HotelFacilities = hotelfacilities != null ? _mapper.Map<List<GetHotelFacilities>>(hotelfacilities) : null;
+            hotelDto.HotelRooms = hotelRooms != null ? _mapper.Map<List<GetRoom>>(hotelRooms) : null;
 
             return Ok(hotelDto);
 
@@ -79,7 +79,7 @@ namespace HwaidakAPI.Controllers
         {
             var facility = await _context.Facilities.Where(x => x.FacilityId == FacilityID).FirstOrDefaultAsync();
             if (facility == null) return NotFound(new ApiResponse(404, "there is no facility with this name"));
-            var hotelFacilitiesGallery = await _context.VwHotelsFacilitiesGalleries.Where(x=>x.FacilitiesId == facility.FacilityId).ToListAsync();
+            var hotelFacilitiesGallery = await _context.VwHotelsFacilitiesGalleries.Where(x => x.FacilitiesId == facility.FacilityId).ToListAsync();
             var hotelFacilityGalleryDto = _mapper.Map<IEnumerable<GetFacilitiyGallery>>(hotelFacilitiesGallery);
             return Ok(hotelFacilityGalleryDto);
 
@@ -102,7 +102,7 @@ namespace HwaidakAPI.Controllers
             if (facility == null) return NotFound(new ApiResponse(404, "this Facility Doesnt Exist"));
             var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
-            var MasterhotelFacilitiesItems = await _context.VwMasterHotelFacilitiesItems.Where(x => x.LangId == language.LangId && x.HotelFacilitiesId==facility.HotelFacilitiesId).ToListAsync();
+            var MasterhotelFacilitiesItems = await _context.VwMasterHotelFacilitiesItems.Where(x => x.LangId == language.LangId && x.HotelFacilitiesId == facility.HotelFacilitiesId).ToListAsync();
             var MasterhotelFacilityItemsDto = _mapper.Map<IEnumerable<GitMasterHotelFacilitiesItems>>(MasterhotelFacilitiesItems);
             return Ok(MasterhotelFacilityItemsDto);
 

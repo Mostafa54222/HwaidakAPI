@@ -8,13 +8,21 @@ namespace HwaidakAPI.Helpers.Profiles.Hotels
     {
         public HotelsProfile()
         {
-            CreateMap<Hotel, GetHotel>();
+            CreateMap<VwHotelsFacility, GetHotelFacilities>();
             CreateMap<VwGallery, GetHotelGallery>();
             CreateMap<HotelsContent, GetHotelContent>();
-            CreateMap<VwHotelsFacility, GetHotelFacilities>();
             CreateMap<VwHotelsFacilitiesGallery, GetFacilitiyGallery>();
             CreateMap<VwMasterHotelFacility, GetMasterHotelFacilities>();
             CreateMap<VwMasterHotelFacilitiesItem, GitMasterHotelFacilitiesItems>();
+
+
+
+
+            CreateMap<VwHotel, GetHotel>()
+                .ForMember(dest => dest.HotelGallery, opt => opt.Ignore())
+                .ForMember(dest => dest.HotelFacilities, opt => opt.Ignore());
+
+            CreateMap<VwHotel, GetHotelList>();
 
         }
     }
