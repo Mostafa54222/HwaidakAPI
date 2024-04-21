@@ -8,8 +8,10 @@ namespace HwaidakAPI.Helpers.Profiles.MeetingEvent
     {
         public MeetingEvent()
         {
-            CreateMap<VwMeetingsEvent, GetMeetingEvent>();
-            CreateMap<VwMeetingsEvent, GetMeetingEventsDetails>();
+            CreateMap<VwMeetingsEvent, GetMeetingEvent>()
+                .ForMember(dest => dest.HotelName, opt => opt.MapFrom(src => src.HotelNameSys));
+            CreateMap<VwMeetingsEvent, GetMeetingEventsDetails>()
+                .ForMember(dest => dest.HotelName, opt => opt.MapFrom(src => src.HotelNameSys));
             CreateMap<VwMeetingsEventsGallery, GetMeetingEventsGallery>();
             CreateMap<VwHotel, GetMeetingEventWithPageDetails>();
         }

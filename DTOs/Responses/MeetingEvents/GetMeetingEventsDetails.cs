@@ -2,9 +2,8 @@
 {
     public class GetMeetingEventsDetails
     {
-
+        public string HotelName { get; set; }
         public string FacilityPhoto { get; set; }
-
         public string FacilityBanner { get; set; }
         public string FacilityBannerMobile { get; set; }
         public string FacilityBannerTablet { get; set; }
@@ -31,7 +30,7 @@
 
         public string MeetingCapacity { get; set; }
 
-        public string FacilityPhotoHome { get; set; }
+        //public string FacilityPhotoHome { get; set; }
 
         public List<GetMeetingEventsGallery> MeetingEventGallery { get; set; }
 

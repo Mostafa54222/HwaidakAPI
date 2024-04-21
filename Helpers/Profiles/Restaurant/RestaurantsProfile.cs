@@ -11,6 +11,7 @@ namespace HwaidakAPI.Helpers.Profiles.Restaurant
         {
             CreateMap<VwRestaurant, GetRestaurant>();
             CreateMap<VwRestaurant, GetRestaurantDetails>();
+            CreateMap<VwRestaurantsGallery, GetRestaurantGallery>();
         }
     }
 }

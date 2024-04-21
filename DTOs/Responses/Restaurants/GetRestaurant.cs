@@ -11,8 +11,6 @@
 
         public string RestaurantSummery { get; set; }
 
-        public string RestaurantDetails { get; set; }
-
 
         public string HotelUrl { get; set; }
         public string RestaurantsTypeName { get; set; }
@@ -30,7 +28,6 @@
 
 
 
-        public string RestaurantPhotoHome { get; set; }
 
 
     }

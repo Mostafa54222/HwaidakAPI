@@ -15,11 +15,11 @@ namespace HwaidakAPI.Helpers.Profiles.Hotels
             CreateMap<VwMasterHotelFacility, GetMasterHotelFacilities>();
             CreateMap<VwMasterHotelFacilitiesItem, GitMasterHotelFacilitiesItems>();
 
-
+            CreateMap<VwHotelsNearBy, GetHotelNearBy>();
 
 
             CreateMap<VwHotel, GetHotel>()
-                .ForMember(dest => dest.HotelGallery, opt => opt.Ignore())
+                //.ForMember(dest => dest.HotelGallery, opt => opt.Ignore())
                 .ForMember(dest => dest.HotelFacilities, opt => opt.Ignore())
                 .ForMember(dest => dest.HotelNews, opt => opt.Ignore());
 

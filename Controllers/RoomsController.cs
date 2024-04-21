@@ -38,13 +38,20 @@ namespace HwaidakAPI.Controllers
             MainResponse pagedetails = new MainResponse
             {
                 PageTitle = hotel.HotelAccommodationTitle,
-                PageBannerPC = hotel.HotelAccommodationBanner,
-                PageBannerMobile = hotel.HotelAccommodationBannerMobile,
-                PageBannerTablet = hotel.HotelAccommodationBannerTablet,
+                PageBannerPC = _configuration["ImagesLink"] + hotel.HotelAccommodationBanner,
+                PageBannerMobile = _configuration["ImagesLink"] + hotel.HotelAccommodationBannerMobile,
+                PageBannerTablet = _configuration["ImagesLink"] + hotel.HotelAccommodationBannerTablet,
                 PageText = hotel.HotelAccommodation,
                 PageMetatagTitle = hotel.HotelAccommodationMetatagTitle,
                 PageMetatagDescription = hotel.HotelAccommodationMetatagDescription
             };
+
+            foreach (var room in roomDto)
+            {
+                room.RoomPhotoHome = _configuration["ImagesLink"] + room.RoomPhotoHome;
+            }
+
+
             GetRoomsList model = new GetRoomsList
             {
                 PageDetails = pagedetails,
@@ -67,9 +74,36 @@ namespace HwaidakAPI.Controllers
             var otherrooms = await _context.VwRooms.Where(x => x.HotelUrl == hotelUrl && x.LanguageAbbreviation == languageCode && x.RoomUrl != roomUrl && x.RoomStatus == true && x.IsDeleted == false).ToListAsync();
             var roomDto = _mapper.Map<GetRoomDetails>(roomdetails);
 
+            roomDto.RoomPhoto = _configuration["ImagesLink"] + roomDto.RoomPhoto;
+            roomDto.RoomBanner = _configuration["ImagesLink"] + roomDto.RoomBanner;
+            roomDto.RoomBannerMobile = _configuration["ImagesLink"] + roomDto.RoomBannerMobile;
+            roomDto.RoomBannerTablet = _configuration["ImagesLink"] + roomDto.RoomBannerTablet;
 
             roomDto.RoomAmenities = roomam != null ? _mapper.Map<List<GetRoomAmenity>>(roomam) : null;
             roomDto.OtherRooms = otherrooms != null ? _mapper.Map<List<GetRoom>>(otherrooms) : null;
+
+            if(roomDto.OtherRooms != null)
+            {
+                foreach (var otherr in roomDto.OtherRooms)
+                {
+                    otherr.RoomPhotoHome = _configuration["ImagesLink"] + otherr.RoomPhotoHome;
+                }
+            }
+            if(roomDto.RoomAmenities != null)
+            {
+                foreach (var roomaminities in roomDto.RoomAmenities)
+                {
+                    roomaminities.RoomAmenitiesPhoto = _configuration["IconsLink"] + roomaminities.RoomAmenitiesPhoto;
+                }
+            }
+            if (roomDto.RoomsGalleries != null)
+            {
+
+                foreach (var roomgalleries in roomDto.RoomsGalleries)
+                {
+                    roomgalleries.PhotoFile = _configuration["ImagesLink"] + roomgalleries.PhotoFile;
+                }
+            }
 
 
 

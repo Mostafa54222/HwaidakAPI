@@ -56,7 +56,7 @@
 
 
         public List<GetRestaurantGallery> RestaurantGalleries { get; set; }
-        public GetRestaurantType GetRestaurantType { get; set; }
+        //public GetRestaurantType GetRestaurantType { get; set; }
         public List<GetRestaurant> OtherRestaurants { get; set; }
     }
 }
