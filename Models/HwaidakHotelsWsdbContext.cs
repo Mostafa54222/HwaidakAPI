@@ -368,8 +368,6 @@ public partial class HwaidakHotelsWsdbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.HasDefaultSchema("titdevHwaidak24");
-
         modelBuilder.Entity<CountriesContent>(entity =>
         {
             entity.HasKey(e => e.CountryContentId);
@@ -1039,6 +1037,9 @@ public partial class HwaidakHotelsWsdbContext : DbContext
             entity.Property(e => e.HotelLocationBannerTabletHieght).HasColumnName("HotelLocation_BannerTablet_Hieght");
             entity.Property(e => e.HotelLocationBannerTabletWidth).HasColumnName("HotelLocation_BannerTablet_Width");
             entity.Property(e => e.HotelLogo).HasMaxLength(250);
+            entity.Property(e => e.HotelLogoColored)
+                .HasMaxLength(250)
+                .HasColumnName("HotelLogo_Colored");
             entity.Property(e => e.HotelMeetingBanner)
                 .HasMaxLength(250)
                 .HasColumnName("HotelMeeting_Banner");
@@ -5471,6 +5472,9 @@ public partial class HwaidakHotelsWsdbContext : DbContext
                 .HasColumnType("ntext")
                 .HasColumnName("HotelLocation_Title");
             entity.Property(e => e.HotelLogo).HasMaxLength(250);
+            entity.Property(e => e.HotelLogoColored)
+                .HasMaxLength(250)
+                .HasColumnName("HotelLogo_Colored");
             entity.Property(e => e.HotelMeeitngThanksMetatagDescription)
                 .HasColumnType("ntext")
                 .HasColumnName("HotelMeeitng_Thanks_MetatagDescription");

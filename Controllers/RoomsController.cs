@@ -81,8 +81,10 @@ namespace HwaidakAPI.Controllers
 
             roomDto.RoomAmenities = roomam != null ? _mapper.Map<List<GetRoomAmenity>>(roomam) : null;
             roomDto.OtherRooms = otherrooms != null ? _mapper.Map<List<GetRoom>>(otherrooms) : null;
+            roomDto.RoomsGalleries = roomgallery != null ? _mapper.Map<List<GetRoomGallery>>(roomgallery) : null;
 
-            if(roomDto.OtherRooms != null)
+
+            if (roomDto.OtherRooms != null)
             {
                 foreach (var otherr in roomDto.OtherRooms)
                 {

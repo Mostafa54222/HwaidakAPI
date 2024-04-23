@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using HwaidakAPI.DTOs.Responses.ContactUs;
+using HwaidakAPI.DTOs.Responses.Facilities;
+using HwaidakAPI.DTOs.Responses.Group;
 using HwaidakAPI.DTOs.Responses.Gyms;
 using HwaidakAPI.DTOs.Responses.Home;
 using HwaidakAPI.DTOs.Responses.Hotels;
@@ -32,7 +34,14 @@ namespace HwaidakAPI.Controllers
             var hotels = await _context.VwHotels.Where(x=>x.HotelStatus == true && x.LanguageAbbreviation == languageCode).ToListAsync();
 
             var hotelDtos = _mapper.Map<List<GetHotelList>>(hotels);
-
+            if (hotelDtos != null)
+            {
+                foreach (var hotel in hotelDtos)
+                {
+                    hotel.HotelPhoto = _configuration["ImagesLink"] + hotel.HotelPhoto;
+                    hotel.HotelLogoColored = _configuration["ImagesLink"] + hotel.HotelLogoColored;
+                }
+            }
 
             return Ok(hotelDtos);
         }
@@ -55,7 +64,7 @@ namespace HwaidakAPI.Controllers
 
 
 
-            var hotelfacilities = await _context.VwHotelsFacilities.Where(x => x.HotelId == hotel.HotelId && x.LanguageAbbreviation == languageCode && x.HotelFacilitiesItemStatus == true).OrderBy(x => x.HotelFacilitiesItemPosition).ToListAsync();
+            var facilities = await _context.VwFacilities.Where(x => x.LanguageAbbreviation == languageCode && x.HotelUrl == hotelurl && x.FacilityStatus == true && x.IsDeleted == false).ToListAsync();
             var hotelRooms = await _context.VwRooms.Where(x => x.HotelId == hotel.HotelId && x.LanguageAbbreviation == languageCode && x.RoomStatus == true).OrderBy(x => x.RoomPosition).ToListAsync();
             var hotelNews = await _context.VwNews.Where(x => x.HotelId == hotel.HotelId && x.LanguageAbbreviation == languageCode && x.NewsStatus == true).ToListAsync();
             var hotelNearBy = await _context.VwHotelsNearBies.Where(x => x.HotelId == hotel.HotelId && x.LanguageAbbreviation == languageCode && x.HotelNearByStatus == true).ToListAsync();
@@ -65,37 +74,43 @@ namespace HwaidakAPI.Controllers
 
 
             hotelDto.HotelPhoto = _configuration["ImagesLink"] + hotelDto.HotelPhoto;
-            hotelDto.HotelLogo = _configuration["ImagesLink"] + hotelDto.HotelLogo;
-            hotelDto.SectionWelcomeTitle1 = homeContent.SectionWelcomeTitle1;
-            hotelDto.SectionWelcomeTitle2 = homeContent.SectionWelcomeTitle2;
-            hotelDto.SectionWelcomeTitleText = homeContent.SectionWelcomeTitleText;
-            hotelDto.SectionRoomTitleBack = homeContent.SectionRoomTitleBack;
-            hotelDto.SectionRoomTitle = homeContent.SectionRoomTitle;
-            hotelDto.SectionRoomText = homeContent.SectionRoomText;
-            hotelDto.SectionNewsTitle = homeContent.SectionNewsTitle;
-            hotelDto.SectionNewsText = homeContent.SectionNewsText;
+            if(homeContent != null)
+            {
+                hotelDto.SectionWelcomeTitle1 = homeContent.SectionWelcomeTitle1;
+                hotelDto.SectionWelcomeTitle2 = homeContent.SectionWelcomeTitle2;
+                hotelDto.SectionWelcomeTitleText = homeContent.SectionWelcomeTitleText;
+                hotelDto.SectionRoomTitleBack = homeContent.SectionRoomTitleBack;
+                hotelDto.SectionRoomTitle = homeContent.SectionRoomTitle;
+                hotelDto.SectionRoomText = homeContent.SectionRoomText;
+                hotelDto.SectionNewsTitle = homeContent.SectionNewsTitle;
+                hotelDto.SectionNewsText = homeContent.SectionNewsText;
+                hotelDto.SectionActivitiesTitle = homeContent.SectionActivitiesTitle;
+                hotelDto.SectionActivitiesText = homeContent.SectionActivitiesText;
+
+            }
+
 
             hotelDto.Sliders = slidersDto != null ? _mapper.Map<List<GetSliders>>(slidersDto) : null;
-            hotelDto.HotelFacilities = hotelfacilities != null ? _mapper.Map<List<GetHotelFacilities>>(hotelfacilities) : null;
+            hotelDto.HotelFacilities = facilities != null ? _mapper.Map<List<GetFacility>>(facilities) : null;
             hotelDto.HotelRooms = hotelRooms != null ? _mapper.Map<List<GetRoom>>(hotelRooms) : null;
             hotelDto.HotelNews = hotelNews != null ? _mapper.Map<List<GetNewsList>>(hotelNews) : null;
             hotelDto.HotelNearBy = hotelNearBy != null ? _mapper.Map<List<GetHotelNearBy>>(hotelNearBy) : null;
 
 
-            hotelDto.HotelFooter = _mapper.Map<GetHotelFooter>(hotel);
-            hotelDto.HotelHeader = _mapper.Map<GetHotelHeader>(hotel);
 
 
-            foreach (var lang in languages)
+            foreach (var news in hotelDto.HotelNews)
             {
-                hotelDto.HotelHeader.Languages.Add(new LanguageResponse
-                {
-                    LanguageName = lang.LanguageName,
-                    LanguageAbbreviation = lang.LanguageAbbreviation
-                });
+                news.NewsDateTime = DateTime.Parse(news.NewsDateTime.ToString()).ToString("dd MMMM yyyy");
             }
 
-            hotelDto.HotelHeader.HotelLogo = _configuration["ImagesLink"] + hotelDto.HotelHeader.HotelLogo;
+            if (hotelDto.HotelFacilities != null)
+            {
+                foreach (var hotelfacilities in hotelDto.HotelFacilities)
+                {
+                    hotelfacilities.FacilityPhotoHome = _configuration["ImagesLink"] + hotelfacilities.FacilityPhotoHome;
+                }
+            }
 
             if (hotelDto.Sliders != null)
             {
@@ -119,16 +134,48 @@ namespace HwaidakAPI.Controllers
                     hotelnews.NewsPhoto = _configuration["ImagesLink"] + hotelnews.NewsPhoto;
                 }
             }
-            if (hotelDto.HotelFacilities != null)
-            {
-                foreach (var hotelfacilites in hotelDto.HotelFacilities)
-                {
-                    hotelfacilites.HotelFacilitiesIcon = _configuration["IconsLink"] + hotelfacilites.HotelFacilitiesIcon;
-                }
-            }
 
             return Ok(hotelDto);
 
+        }
+
+
+
+        [HttpGet("HotelLayout/{languageCode}/{hotelUrl}")]
+        public async Task<ActionResult<GetHotelLayout>> GetHotelLayout(string hotelUrl, string languageCode = "en")
+        {
+            var languages = await _context.MasterLanguages.ToListAsync();
+
+            var hotel = await _context.VwHotels.Where(x => x.HotelUrl == hotelUrl && x.HotelStatus == true).FirstOrDefaultAsync();
+            if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
+
+            var groupLayout = await _context.TblGroupLayouts.FirstOrDefaultAsync();
+
+
+            var groupFooterDto = _mapper.Map<GetGroupFooter>(groupLayout);
+
+
+
+            GetHotelLayout model = new()
+            {
+                HotelHeader = _mapper.Map<GetHotelHeader>(hotel),
+                HotlFooter = _mapper.Map<GetHotelFooter>(hotel)
+            };
+            model.HotelHeader.ButtonGroupUrl = _configuration["ButtonGroupUrl"];
+            model.HotlFooter.GroupLogo = _configuration["ImagesLink"] + groupFooterDto.GroupLogo;
+            model.HotelHeader.HotelLogo = _configuration["ImagesLink"] + model.HotelHeader.HotelLogo;
+            model.HotelHeader.HotelLogoColored = _configuration["ImagesLink"] + model.HotelHeader.HotelLogoColored;
+
+            foreach (var lang in languages)
+            {
+                model.HotelHeader.Languages.Add(new LanguageResponse
+                {
+                    LanguageName = lang.LanguageName,
+                    LanguageAbbreviation = lang.LanguageAbbreviation
+                });
+            }
+
+            return Ok(model);
         }
 
     }

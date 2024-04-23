@@ -30,19 +30,7 @@ namespace HwaidakAPI.Controllers
             var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
 
-            var groupLayout = await _context.TblGroupLayouts.FirstOrDefaultAsync();
-            var groupHeaderDto = _mapper.Map<GetGroupHeader>(groupLayout);
-
-
-
-            foreach (var lang in languages)
-            {
-                groupHeaderDto.Languages.Add(new LanguageResponse
-                {
-                    LanguageName = lang.LanguageName,
-                    LanguageAbbreviation = lang.LanguageAbbreviation
-                });
-            }
+            
 
 
 
@@ -69,8 +57,6 @@ namespace HwaidakAPI.Controllers
             var groupHomeVideoDto = _mapper.Map<GetGroupHomeVideo>(groupHomeVideo);
 
 
-            var groupFooterDto = _mapper.Map<GetGroupFooter>(groupLayout);
-            groupFooterDto.GroupLogo = _configuration["ImagesLink"] + groupFooterDto.GroupLogo;
 
 
             if (groupSlidersDto != null)
@@ -99,17 +85,58 @@ namespace HwaidakAPI.Controllers
 
             GetGroupResponse model = new()
             {
-                GroupHeader = groupHeaderDto,
                 GroupSliders = groupSlidersDto,
                 GroupHomeIntro = groupHomeIntroDto,
                 GroupHomeIntroActivities = groupHomeIntroActivitiesDto,
                 Hotels = hotelDtos,
                 GroupHome = groupHomeDto,
                 GroupHomeVideo = groupHomeVideoDto,
-                GroupFooter = groupFooterDto
 
             };
 
+            return Ok(model);
+        }
+
+
+
+        [HttpGet("GroupLayout/{languageCode}")]
+        public async Task<ActionResult<GetGroupLayout>> GetGroupLayout(string languageCode = "en")
+        {
+            var languages = await _context.MasterLanguages.ToListAsync();
+            var groupSocials = await _context.TblGroupSocials.Where(x => x.SocialStatus == true).OrderBy(x => x.SocialPosition).ToListAsync();
+
+            var groupLayout = await _context.TblGroupLayouts.FirstOrDefaultAsync();
+            var groupHeaderDto = _mapper.Map<GetGroupHeader>(groupLayout);
+            var groupFooterDto = _mapper.Map<GetGroupFooter>(groupLayout);
+            groupFooterDto.GroupLogo = _configuration["ImagesLink"] + groupFooterDto.GroupLogo;
+            groupHeaderDto.GroupLogo = _configuration["ImagesLink"] + groupHeaderDto.GroupLogo;
+
+
+
+            foreach (var lang in languages)
+            {
+                groupHeaderDto.Languages.Add(new LanguageResponse
+                {
+                    LanguageName = lang.LanguageName,
+                    LanguageAbbreviation = lang.LanguageAbbreviation
+                });
+            }
+
+            foreach (var social in groupSocials)
+            {
+                groupFooterDto.GroupSocials.Add(new GetGroupSocials
+                {
+                    SocialClass = social.SocialClass,
+                    SocialColor = social.SocialColor,
+                    SocialName = social.SocialName,
+                    SocialUrl = social.SocialUrl
+                });
+            }
+            GetGroupLayout model = new()
+            {
+                GroupHeader = groupHeaderDto,
+                GroupFooter = groupFooterDto
+            };
             return Ok(model);
         }
     }

@@ -33,6 +33,10 @@ namespace HwaidakAPI.Controllers
 
             var NewsDto = _mapper.Map<IEnumerable<GetNewsList>>(News);
 
+            foreach (var news in NewsDto)
+            {
+                news.NewsDateTime = DateTime.Parse(news.NewsDateTime.ToString()).ToString("dd MMMM yyyy");
+            }
 
             return Ok(NewsDto);
         }
@@ -44,7 +48,11 @@ namespace HwaidakAPI.Controllers
             if (News == null) return NotFound(new ApiResponse(404, "this New doesnt exist"));
             var NewsGallery = await _context.TblNewsGalleries.Where(x => x.NewsId == News.NewsId &&x.PhotoStatus==true).ToListAsync();
             var NewsDto = _mapper.Map<GetNewsDetails>(News);
-            
+
+            NewsDto.NewsDateTime = DateTime.Parse(NewsDto.NewsDateTime.ToString()).ToString("dd MMMM yyyy");
+
+
+
             NewsDto.NewsGallery = NewsGallery != null ? _mapper.Map<List<GetNewsGallery>>(NewsGallery) : null;
 
             return Ok(NewsDto);

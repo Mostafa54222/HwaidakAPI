@@ -11,5 +11,6 @@
         public string GroupSummery { get; set; }
 
         public string GroupLogo { get; set; }
+        public List<GetGroupSocials> GroupSocials { get; set; } = [];
     }
 }

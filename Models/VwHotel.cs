@@ -1038,4 +1038,6 @@ public partial class VwHotel
     public int? HotelWellnessBannerMobileHieght { get; set; }
 
     public bool? LangStatus { get; set; }
+
+    public string HotelLogoColored { get; set; }
 }

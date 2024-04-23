@@ -16,6 +16,8 @@ namespace HwaidakAPI.Helpers.Profiles.GroupHome
             CreateMap<TblGroupSlider, GetGroupSlider>();
             CreateMap<TblGroupLayout, GetGroupHeader>();
             CreateMap<TblGroupLayout, GetGroupFooter>();
+
+            CreateMap<TblGroupSocial, GetGroupSocials>();
         }
     }
 }

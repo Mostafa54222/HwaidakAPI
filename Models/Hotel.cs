@@ -77,6 +77,8 @@ public partial class Hotel
 
     public string HotelLogo { get; set; }
 
+    public string HotelLogoColored { get; set; }
+
     public bool? HotelStatus { get; set; }
 
     public int? CountryId { get; set; }

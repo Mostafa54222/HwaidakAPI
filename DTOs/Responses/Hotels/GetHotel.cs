@@ -1,4 +1,5 @@
 ﻿using HwaidakAPI.DTOs.Responses.ContactUs;
+using HwaidakAPI.DTOs.Responses.Facilities;
 using HwaidakAPI.DTOs.Responses.Home;
 using HwaidakAPI.DTOs.Responses.News;
 using HwaidakAPI.DTOs.Responses.Rooms;
@@ -19,6 +20,9 @@ namespace HwaidakAPI.DTOs.Responses.Hotels
         public string SectionRoomTitle { get; set; }
         public string SectionRoomText { get; set; }
 
+        public string SectionActivitiesTitle { get; set; }
+        public string SectionActivitiesText { get; set; }
+
 
 
 
@@ -30,21 +34,20 @@ namespace HwaidakAPI.DTOs.Responses.Hotels
 
         public string HotelPhoto { get; set; }
 
-        public string HotelLogo { get; set; }
 
         public string HotelNear { get; set; }
 
         public string HotelNearTitle { get; set; }
-        public GetHotelHeader HotelHeader { get; set; }
+        //public GetHotelHeader HotelHeader { get; set; }
 
         public List<GetSliders> Sliders { get; set; }
 
         //public List<GetHotelGallery> HotelGallery { get; set; } = [];
         public List<GetHotelNearBy> HotelNearBy { get; set; }
         public List<GetRoom> HotelRooms { get; set; } = [];
-        public List<GetHotelFacilities> HotelFacilities { get; set; } = [];
+        public List<GetFacility> HotelFacilities { get; set; } = [];
         public List<GetNewsList> HotelNews { get; set; } = [];
-        public GetHotelFooter HotelFooter { get; set; }
+        //public GetHotelFooter HotelFooter { get; set; }
 
     }
 }

@@ -4,7 +4,7 @@
     {
 
         public string NewsPhoto { get; set; }
-        public DateTime? NewsDateTime { get; set; }
+        public string NewsDateTime { get; set; }
         public string NewsUrl { get; set; }
         public string NewsShortDescription { get; set; }
         public string NewsDetails { get; set; }

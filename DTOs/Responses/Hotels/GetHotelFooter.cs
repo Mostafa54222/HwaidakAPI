@@ -7,5 +7,6 @@
         public string HotelAddress { get; set; }
         public string HotelLocationTitle { get; set; }
         public string HotelLocation { get; set; }
+        public string GroupLogo { get; set; }
     }
 }

@@ -11,6 +11,7 @@
         public string HotelPhoto { get; set; }
 
         public string HotelLogo { get; set; }
+        public string HotelLogoColored { get; set; }
 
         public string HotelEmail { get; set; }
 
