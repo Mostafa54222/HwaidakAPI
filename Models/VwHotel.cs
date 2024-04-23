@@ -1036,4 +1036,6 @@ public partial class VwHotel
     public int? HotelWellnessBannerMobileWidth { get; set; }
 
     public int? HotelWellnessBannerMobileHieght { get; set; }
+
+    public bool? LangStatus { get; set; }
 }

@@ -25,6 +25,10 @@ namespace HwaidakAPI.Helpers.Profiles.Hotels
 
             CreateMap<VwHotel, GetHotelList>();
 
+
+            CreateMap<VwHotel, GetHotelFooter>();
+            CreateMap<VwHotel, GetHotelHeader>();
+
         }
     }
 }

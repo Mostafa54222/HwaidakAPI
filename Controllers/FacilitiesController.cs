@@ -47,7 +47,7 @@ namespace HwaidakAPI.Controllers
             };
             foreach (var facility in facilitiesDto)
             {
-                facility.FacilityPhoto = _configuration["ImagesLink"] + facility.FacilityPhoto;
+                facility.FacilityPhotoHome = _configuration["ImagesLink"] + facility.FacilityPhotoHome;
             }
 
             GetFacilityList model = new()
@@ -61,52 +61,47 @@ namespace HwaidakAPI.Controllers
         }
 
 
-        //[HttpGet("RestaurantDetails/{languageCode}/{hotelUrl}/{facilityUrl}")]
-        //public async Task<ActionResult<GetRestaurantDetails>> GetRestaurantDetails(string hotelUrl, string facilityUrl, string languageCode = "en")
-        //{
-        //    var facilityDetails = await _context.VwFacilities.Where(x => x.HotelUrl == hotelUrl && x.FacilityUrl == facilityUrl && x.LanguageAbbreviation == languageCode && x.FacilityStatus == true && x.IsDeleted == false).FirstOrDefaultAsync();
-        //    var facilityGallery = await _context.FacilitiesGalleries.Where(x => x.FacilitiesId == facilityUrl.RestaurantId && x.PhotoStatus == true).OrderBy(x => x.PhotoPosition).ToListAsync();
-        //    var otherrestaurant = await _context.VwRestaurants.Where(x => x.HotelUrl == hotelUrl && x.RestaurantUrl != restaurantUrl && x.LanguageAbbreviation == languageCode && x.RestaurantStatus == true && x.IsDeleted == false).ToListAsync();
-        //    var restaurantDto = _mapper.Map<GetRestaurantDetails>(restaurantdetails);
+        [HttpGet("{languageCode}/{hotelUrl}/{facilityUrl}")]
+        public async Task<ActionResult<GetFacilityDetails>> GetRestaurantDetails(string hotelUrl, string facilityUrl, string languageCode = "en")
+        {
+            var facilityDetails = await _context.VwFacilities.Where(x => x.HotelUrl == hotelUrl && x.FacilityUrl == facilityUrl && x.LanguageAbbreviation == languageCode && x.FacilityStatus == true && x.IsDeleted == false).FirstOrDefaultAsync();
+            var facilityGallery = await _context.FacilitiesGalleries.Where(x => x.FacilitiesId == facilityDetails.FacilityId && x.PhotoStatus == true).OrderBy(x => x.PhotoPosition).ToListAsync();
+            var otherfacilities = await _context.VwFacilities.Where(x => x.HotelUrl == hotelUrl && x.FacilityUrl != facilityUrl && x.LanguageAbbreviation == languageCode && x.FacilityStatus == true && x.IsDeleted == false).ToListAsync();
+            var facilityDto = _mapper.Map<GetFacilityDetails>(facilityDetails);
 
-        //    restaurantDto.RestaurantPhoto = _configuration["ImagesLink"] + restaurantDto.RestaurantPhoto;
-        //    restaurantDto.RestaurantsTypePhoto = _configuration["ImagesLink"] + restaurantDto.RestaurantsTypePhoto;
-        //    restaurantDto.RestaurantBanner = _configuration["ImagesLink"] + restaurantDto.RestaurantBanner;
-        //    restaurantDto.RestaurantBannerTablet = _configuration["ImagesLink"] + restaurantDto.RestaurantBannerTablet;
-        //    restaurantDto.RestaurantBannerMobile = _configuration["ImagesLink"] + restaurantDto.RestaurantBannerMobile;
-        //    restaurantDto.RestaurantsTypeBanner = _configuration["ImagesLink"] + restaurantDto.RestaurantsTypeBanner;
-        //    restaurantDto.RestaurantsTypeBannerMobile = _configuration["ImagesLink"] + restaurantDto.RestaurantsTypeBannerMobile;
-        //    restaurantDto.RestaurantsTypeBannerTablet = _configuration["ImagesLink"] + restaurantDto.RestaurantsTypeBannerTablet;
+            facilityDto.FacilityPhoto = _configuration["ImagesLink"] + facilityDto.FacilityPhoto;
+            facilityDto.FacilityBanner = _configuration["ImagesLink"] + facilityDto.FacilityBanner;
+            facilityDto.FacilityBannerMobile = _configuration["ImagesLink"] + facilityDto.FacilityBannerMobile;
+            facilityDto.FacilityBannerTablet = _configuration["ImagesLink"] + facilityDto.FacilityBannerTablet;
 
 
 
-        //    restaurantDto.OtherRestaurants = otherrestaurant != null ? _mapper.Map<List<GetRestaurant>>(otherrestaurant) : null;
-        //    restaurantDto.RestaurantGalleries = restaurantgallery != null ? _mapper.Map<List<GetRestaurantGallery>>(restaurantgallery) : null;
+            facilityDto.OtherFacility = otherfacilities != null ? _mapper.Map<List<GetFacility>>(otherfacilities) : null;
+            facilityDto.FacilityGallery = facilityGallery != null ? _mapper.Map<List<GetFacilityGallery>>(facilityGallery) : null;
 
 
 
 
 
-        //    if (restaurantDto.OtherRestaurants != null)
-        //    {
-        //        foreach (var otherr in restaurantDto.OtherRestaurants)
-        //        {
-        //            otherr.RestaurantPhoto = _configuration["ImagesLink"] + otherr.RestaurantPhoto;
-        //            otherr.RestaurantsTypePhoto = _configuration["ImagesLink"] + otherr.RestaurantsTypePhoto;
-        //        }
-        //    }
-        //    if (restaurantDto.RestaurantGalleries != null)
-        //    {
+            if (facilityDto.OtherFacility != null)
+            {
+                foreach (var otherr in facilityDto.OtherFacility)
+                {
+                    otherr.FacilityPhotoHome = _configuration["ImagesLink"] + otherr.FacilityPhotoHome;
+                }
+            }
+            if (facilityDto.FacilityGallery != null)
+            {
 
-        //        foreach (var roomgalleries in restaurantDto.RestaurantGalleries)
-        //        {
-        //            roomgalleries.PhotoFile = _configuration["ImagesLink"] + roomgalleries.PhotoFile;
-        //        }
-        //    }
+                foreach (var facilityG in facilityDto.FacilityGallery)
+                {
+                    facilityG.PhotoFile = _configuration["ImagesLink"] + facilityG.PhotoFile;
+                }
+            }
 
 
-        //    return Ok(restaurantDto);
-        //}
+            return Ok(facilityDto);
+        }
 
     }
 }

@@ -26,6 +26,8 @@
 
         public string HotelUrl { get; set; }
 
+        public List<GetFacilityGallery> FacilityGallery { get; set; }
+        public List<GetFacility> OtherFacility { get; set; }
 
     }
 }

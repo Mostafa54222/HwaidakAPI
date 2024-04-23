@@ -7,6 +7,8 @@ public partial class Hotel
 {
     public int HotelId { get; set; }
 
+    public int? DestinationId { get; set; }
+
     public string HotelNameSys { get; set; }
 
     public string HotelUrl { get; set; }
@@ -78,8 +80,6 @@ public partial class Hotel
     public bool? HotelStatus { get; set; }
 
     public int? CountryId { get; set; }
-
-    public int? DestinationId { get; set; }
 
     public string HotelEmail { get; set; }
 

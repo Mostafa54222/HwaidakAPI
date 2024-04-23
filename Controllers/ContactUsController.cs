@@ -23,7 +23,7 @@ namespace HwaidakAPI.Controllers
         }
 
         [HttpGet("{languageCode}/{hotelUrl}")]
-        public async Task<ActionResult<GetRestaurantsList>> GetHotelContactUs(string hotelUrl, string languageCode = "en")
+        public async Task<ActionResult<ContactResponse>> GetHotelContactUs(string hotelUrl, string languageCode = "en")
         {
             var hotel = await _context.VwHotels.Where(x => x.HotelUrl == hotelUrl && x.HotelStatus == true && x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));

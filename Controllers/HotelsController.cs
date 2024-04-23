@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HwaidakAPI.DTOs.Responses.ContactUs;
 using HwaidakAPI.DTOs.Responses.Gyms;
 using HwaidakAPI.DTOs.Responses.Home;
 using HwaidakAPI.DTOs.Responses.Hotels;
@@ -41,6 +42,7 @@ namespace HwaidakAPI.Controllers
         {
             var hotel = await _context.VwHotels.Where(x => x.HotelUrl == hotelurl && x.HotelStatus == true).FirstOrDefaultAsync();
             if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
+            var languages = await _context.MasterLanguages.ToListAsync();
             var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
 
@@ -62,12 +64,16 @@ namespace HwaidakAPI.Controllers
             var hotelDto = _mapper.Map<GetHotel>(hotel);
 
 
-
             hotelDto.HotelPhoto = _configuration["ImagesLink"] + hotelDto.HotelPhoto;
             hotelDto.HotelLogo = _configuration["ImagesLink"] + hotelDto.HotelLogo;
             hotelDto.SectionWelcomeTitle1 = homeContent.SectionWelcomeTitle1;
             hotelDto.SectionWelcomeTitle2 = homeContent.SectionWelcomeTitle2;
             hotelDto.SectionWelcomeTitleText = homeContent.SectionWelcomeTitleText;
+            hotelDto.SectionRoomTitleBack = homeContent.SectionRoomTitleBack;
+            hotelDto.SectionRoomTitle = homeContent.SectionRoomTitle;
+            hotelDto.SectionRoomText = homeContent.SectionRoomText;
+            hotelDto.SectionNewsTitle = homeContent.SectionNewsTitle;
+            hotelDto.SectionNewsText = homeContent.SectionNewsText;
 
             hotelDto.Sliders = slidersDto != null ? _mapper.Map<List<GetSliders>>(slidersDto) : null;
             hotelDto.HotelFacilities = hotelfacilities != null ? _mapper.Map<List<GetHotelFacilities>>(hotelfacilities) : null;
@@ -76,6 +82,20 @@ namespace HwaidakAPI.Controllers
             hotelDto.HotelNearBy = hotelNearBy != null ? _mapper.Map<List<GetHotelNearBy>>(hotelNearBy) : null;
 
 
+            hotelDto.HotelFooter = _mapper.Map<GetHotelFooter>(hotel);
+            hotelDto.HotelHeader = _mapper.Map<GetHotelHeader>(hotel);
+
+
+            foreach (var lang in languages)
+            {
+                hotelDto.HotelHeader.Languages.Add(new LanguageResponse
+                {
+                    LanguageName = lang.LanguageName,
+                    LanguageAbbreviation = lang.LanguageAbbreviation
+                });
+            }
+
+            hotelDto.HotelHeader.HotelLogo = _configuration["ImagesLink"] + hotelDto.HotelHeader.HotelLogo;
 
             if (hotelDto.Sliders != null)
             {

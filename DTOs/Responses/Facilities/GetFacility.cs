@@ -4,7 +4,7 @@
     {
         public string FacilityPhotoHome { get; set; }
 
-        public string FacilityPhoto { get; set; }
+        //public string FacilityPhoto { get; set; }
 
         public string FacilityUrl { get; set; }
 
