@@ -235,5 +235,13 @@ public partial class HotelsContent
 
     public string HotelWellnessMetatagDescription { get; set; }
 
-    public virtual Hotel Hotel { get; set; }
+    public string HotelGetDirectionLink { get; set; }
+
+    public string HotelContactUsIcon { get; set; }
+
+    public string HotelContactUsTitleTop { get; set; }
+
+    public string HotelContactUsTitle { get; set; }
+
+    public string HotelContactUsSummery { get; set; }
 }

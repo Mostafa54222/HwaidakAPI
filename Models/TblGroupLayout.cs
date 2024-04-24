@@ -16,4 +16,6 @@ public partial class TblGroupLayout
     public string GroupSummery { get; set; }
 
     public string GroupLogo { get; set; }
+
+    public string GroupCopyrights { get; set; }
 }

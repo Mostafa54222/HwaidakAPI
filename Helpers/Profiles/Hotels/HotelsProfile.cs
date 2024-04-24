@@ -29,6 +29,9 @@ namespace HwaidakAPI.Helpers.Profiles.Hotels
             CreateMap<VwHotel, GetHotelFooter>();
             CreateMap<VwHotel, GetHotelHeader>();
 
+            CreateMap<TblHotelsSocialMedium, GetHotelSocials>();
+            CreateMap<TblHotelPartner, GetHotelPartners>();
+
         }
     }
 }

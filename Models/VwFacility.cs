@@ -96,4 +96,6 @@ public partial class VwFacility
     public string FacilityBannerMobileColorOverlayFrom { get; set; }
 
     public string Fb360url { get; set; }
+
+    public string FacilityClassIcon { get; set; }
 }

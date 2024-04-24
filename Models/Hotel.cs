@@ -9,6 +9,12 @@ public partial class Hotel
 
     public int? DestinationId { get; set; }
 
+    public bool? EnableOnlineCheckIn { get; set; }
+
+    public bool? HotelStatus { get; set; }
+
+    public bool? EnableOnlineBooking { get; set; }
+
     public string HotelNameSys { get; set; }
 
     public string HotelUrl { get; set; }
@@ -79,8 +85,6 @@ public partial class Hotel
 
     public string HotelLogoColored { get; set; }
 
-    public bool? HotelStatus { get; set; }
-
     public int? CountryId { get; set; }
 
     public string HotelEmail { get; set; }
@@ -101,15 +105,11 @@ public partial class Hotel
 
     public string TripAdvisorUrl { get; set; }
 
-    public bool? EnableOnlineCheckIn { get; set; }
-
     public int? HotelPhotoWidth { get; set; }
 
     public int? HotelPhotoHieght { get; set; }
 
     public int? HotelTypeId { get; set; }
-
-    public bool? EnableOnlineBooking { get; set; }
 
     public string HotelNewsBannerColorOverlayFrom { get; set; }
 
@@ -784,6 +784,4 @@ public partial class Hotel
     public int? HotelWellnessBannerMobileWidth { get; set; }
 
     public int? HotelWellnessBannerMobileHieght { get; set; }
-
-    public virtual ICollection<HotelsContent> HotelsContents { get; set; } = new List<HotelsContent>();
 }

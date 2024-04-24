@@ -3,8 +3,8 @@
     public class GetFacilityDetails
     {
         public string FacilityName { get; set; }
-
         public string FacilityPhoto { get; set; }
+        public string FacilityClassIcon { get; set; }
 
         public string FacilityUrl { get; set; }
         public string FacilityBanner { get; set; }

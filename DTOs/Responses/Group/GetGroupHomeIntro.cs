@@ -8,5 +8,11 @@
 
         public string GroupHomeIntroText { get; set; }
 
+        public string GroupHomeIntroButton { get; set; }
+
+        public string GroupHomeIntroButtonUrl { get; set; }
+
+        public List<GetGroupHomeIntroActivities> GroupHomeIntroActivities { get; set; } = [];
+
     }
 }

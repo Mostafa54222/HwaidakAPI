@@ -8,5 +8,7 @@
         public string HotelLocationTitle { get; set; }
         public string HotelLocation { get; set; }
         public string GroupLogo { get; set; }
+        public string Copyrights { get; set; }
+        public List<GetHotelSocials> HotelSocials { get; set; } = [];
     }
 }

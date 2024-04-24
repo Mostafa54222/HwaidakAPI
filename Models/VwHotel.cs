@@ -1040,4 +1040,14 @@ public partial class VwHotel
     public bool? LangStatus { get; set; }
 
     public string HotelLogoColored { get; set; }
+
+    public string HotelGetDirectionLink { get; set; }
+
+    public string HotelContactUsIcon { get; set; }
+
+    public string HotelContactUsTitleTop { get; set; }
+
+    public string HotelContactUsTitle { get; set; }
+
+    public string HotelContactUsSummery { get; set; }
 }

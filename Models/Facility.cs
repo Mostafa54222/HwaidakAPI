@@ -71,6 +71,8 @@ public partial class Facility
 
     public string FacilityBannerMobileColorOverlayTo { get; set; }
 
+    public string FacilityClassIcon { get; set; }
+
     public virtual ICollection<FacilitiesContent> FacilitiesContents { get; set; } = new List<FacilitiesContent>();
 
     public virtual ICollection<FacilitiesGallery> FacilitiesGalleries { get; set; } = new List<FacilitiesGallery>();

@@ -20,4 +20,6 @@ public partial class MasterLanguage
     public string BookingLang { get; set; }
 
     public string BookingCurrency { get; set; }
+
+    public virtual ICollection<TblGroupSlider> TblGroupSliders { get; set; } = new List<TblGroupSlider>();
 }

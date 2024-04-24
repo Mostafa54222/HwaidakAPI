@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HwaidakAPI.DTOs.Responses.Group;
+using HwaidakAPI.DTOs.Responses.Group.GroupFAQ;
 using HwaidakAPI.Models;
 
 namespace HwaidakAPI.Helpers.Profiles.GroupHome
@@ -15,9 +16,12 @@ namespace HwaidakAPI.Helpers.Profiles.GroupHome
 
             CreateMap<TblGroupSlider, GetGroupSlider>();
             CreateMap<TblGroupLayout, GetGroupHeader>();
-            CreateMap<TblGroupLayout, GetGroupFooter>();
+            CreateMap<TblGroupLayout, GetGroupFooter>()
+                .ForMember(dest => dest.Copyrights, opt => opt.MapFrom(src => src.GroupCopyrights));
 
             CreateMap<TblGroupSocial, GetGroupSocials>();
+
+            CreateMap<VwGroupFaq, GetGroupFAQList>();
         }
     }
 }

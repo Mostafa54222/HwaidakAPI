@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using HwaidakAPI.DTOs;
 using HwaidakAPI.DTOs.Responses.Group;
+using HwaidakAPI.DTOs.Responses.Group.GroupFAQ;
 using HwaidakAPI.DTOs.Responses.Home;
 using HwaidakAPI.DTOs.Responses.Hotels;
 using HwaidakAPI.Errors;
@@ -38,9 +40,6 @@ namespace HwaidakAPI.Controllers
             var groupSliders = await _context.TblGroupSliders.Where(x => x.SliderStatus == true && x.IsDeleted == false && x.LangId == language.LangId).ToListAsync();
             var groupSlidersDto = _mapper.Map<List<GetGroupSlider>>(groupSliders);
 
-            var groupHomeIntro = await _context.VwGroupHomeIntros.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
-            var groupHomeIntroDto = _mapper.Map<GetGroupHomeIntro>(groupHomeIntro);
-
             var groupHomeIntroActivities = await _context.VwGroupHomeIntroActivities.Where(x => x.LanguageAbbreviation == languageCode && x.GroupHomeActivityStatus == true).OrderBy(x => x.GroupHomeActivityPosition).ToListAsync();
             var groupHomeIntroActivitiesDto = _mapper.Map<List<GetGroupHomeIntroActivities>>(groupHomeIntroActivities);
 
@@ -51,10 +50,6 @@ namespace HwaidakAPI.Controllers
 
             var groupHome = await _context.VwGroupHomes.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             var groupHomeDto = _mapper.Map<GetGroupHome>(groupHome);
-
-
-            var groupHomeVideo = await _context.VwGroupHomeVideoSections.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
-            var groupHomeVideoDto = _mapper.Map<GetGroupHomeVideo>(groupHomeVideo);
 
 
 
@@ -79,23 +74,92 @@ namespace HwaidakAPI.Controllers
             groupHomeDto.GroupHomePhoto2 = _configuration["ImagesLink"] + groupHomeDto.GroupHomePhoto2;
 
 
-            groupHomeVideo.GroupHomeVideoSectionBanner = _configuration["ImagesLink"] + groupHomeVideo.GroupHomeVideoSectionBanner;
-            groupHomeVideo.GroupHomeVideoSectionBannerMobile = _configuration["ImagesLink"] + groupHomeVideo.GroupHomeVideoSectionBannerMobile;
-            groupHomeVideo.GroupHomeVideoSectionBannerTablet = _configuration["ImagesLink"] + groupHomeVideo.GroupHomeVideoSectionBannerTablet;
+
+            GetGroupHomeIntro homeIntro = new()
+            {
+                GroupHomeIntroTitleTop = groupHomeDto.GroupHomeIntroTitleTop,
+                GroupHomeIntroTitle = groupHomeDto.GroupHomeIntroTitle,
+                GroupHomeIntroText = groupHomeDto.GroupHomeIntroText,
+                GroupHomeIntroButton = groupHomeDto.GroupHomeIntroButton,
+                GroupHomeIntroButtonUrl = groupHomeDto.GroupHomeIntroButtonUrl,
+                GroupHomeIntroActivities = groupHomeIntroActivitiesDto
+            };
+            GetGroupSecondSection groupSecondSection = new()
+            {
+                GroupHomePhoto1 = _configuration["ImagesLink"] + groupHomeDto.GroupHomePhoto1,
+                GroupHomePhoto2 = _configuration["ImagesLink"] + groupHomeDto.GroupHomePhoto2,
+                GroupHomeSecondSectionTitleTop = groupHomeDto.GroupHomeSecondSectionTitleTop,
+                GroupHomeSecondSectionTitle = groupHomeDto.GroupHomeSecondSectionTitle,
+                GroupHomeSecondSectionText = groupHomeDto.GroupHomeSecondSectionText,
+                GroupHomeSecondSectionSubText = groupHomeDto.GroupHomeSecondSectionSubText,
+                GroupHomeSecondSectionButton = groupHomeDto.GroupHomeSecondSectionButton,
+                GroupHomeSecondSectionButtonUrl = groupHomeDto.GroupHomeSecondSectionButtonUrl
+            };
+            GetGroupHomeVideo groupHomeVideo = new()
+            {
+                GroupHomeVideoSectionTitleTop = groupHomeDto.GroupHomeVideoSectionTitleTop,
+                GroupHomeVideoSectionTitle = groupHomeDto.GroupHomeVideoSectionTitle,
+                GroupHomeVideoSectionBanner = _configuration["ImagesLink"] + groupHomeDto.GroupHomeVideoSectionBanner,
+                GroupHomeVideoSectionBannerMobile = _configuration["ImagesLink"] + groupHomeDto.GroupHomeVideoSectionBannerMobile,
+                GroupHomeVideoSectionBannerTablet = _configuration["ImagesLink"] + groupHomeDto.GroupHomeVideoSectionBannerTablet,
+                GroupHomeVideoUrl = groupHomeDto.GroupHomeVideoUrl
+            };
+
+            GetGroupHotelList groupHotelList = new() 
+            { 
+                GroupHomeHotelTitle = groupHomeDto.GroupHomeHotelTitle,
+                GroupHomeHotelTitleTop = groupHomeDto.GroupHomeHotelTitleTop,
+                Hotels = hotelDtos
+            };
+
+
+            GetGroupNewsList groupNewsList = new()
+            {
+                GroupHomeNewsTitle = groupHomeDto.GroupHomeNewsTitle,
+                GroupHomeNewsTitleTop = groupHomeDto.GroupHomeNewsTitleTop,
+            };
+
 
             GetGroupResponse model = new()
             {
                 GroupSliders = groupSlidersDto,
-                GroupHomeIntro = groupHomeIntroDto,
-                GroupHomeIntroActivities = groupHomeIntroActivitiesDto,
-                Hotels = hotelDtos,
-                GroupHome = groupHomeDto,
-                GroupHomeVideo = groupHomeVideoDto,
-
+                GroupHomeIntro = homeIntro,
+                Hotels = groupHotelList,
+                GroupHomeSecondSection = groupSecondSection,
+                GroupHomeVideo = groupHomeVideo,
+                HotelNews = groupNewsList
             };
 
             return Ok(model);
         }
+
+
+        [HttpGet("GroupFAQs/{languageCode}")]
+        public async Task<ActionResult<GetGroupFAQResponse>> GetGroupFAQs(string languageCode = "en")
+        {
+            var pageContent = await _context.VwGroupPages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
+            MainResponse pageDetails = new()
+            {
+                PageTitle = pageContent.GroupFaqTitle,
+                PageText = pageContent.GroupFaq,
+                PageBannerPC = _configuration["ImagesLink"] + pageContent.GroupFaqBanner,
+                PageBannerTablet = _configuration["ImagesLink"] + pageContent.GroupFaqBannerTablet,
+                PageBannerMobile = _configuration["ImagesLink"] + pageContent.GroupFaqBannerMobile,
+                PageMetatagTitle = pageContent.GroupFaqMetatagTitle,
+                PageMetatagDescription = pageContent.GroupFaqMetatagDescription
+            };
+
+            var groupFaqs = await _context.VwGroupFaqs.Where(x => x.LanguageAbbreviation == languageCode).ToListAsync();
+            var groupFaqsDto = _mapper.Map<List<GetGroupFAQList>>(groupFaqs);
+            GetGroupFAQResponse model = new()
+            {
+                PageDetails = pageDetails,
+                GroupFAQs = groupFaqsDto
+            };
+            return Ok(model);
+        }
+
+
 
 
 

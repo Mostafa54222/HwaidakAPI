@@ -36,4 +36,6 @@ public partial class TblGroupSlider
     public double? SliderPhotoWidth { get; set; }
 
     public double? SliderPhotoHieght { get; set; }
+
+    public virtual MasterLanguage Lang { get; set; }
 }

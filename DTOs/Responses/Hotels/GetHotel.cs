@@ -41,6 +41,7 @@ namespace HwaidakAPI.DTOs.Responses.Hotels
         //public GetHotelHeader HotelHeader { get; set; }
 
         public List<GetSliders> Sliders { get; set; }
+        public List<GetHotelPartners> HotelPartners { get; set; }
 
         //public List<GetHotelGallery> HotelGallery { get; set; } = [];
         public List<GetHotelNearBy> HotelNearBy { get; set; }

@@ -55,6 +55,16 @@ namespace HwaidakAPI.Controllers
             var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
 
+            var hotelPartners = await _context.TblHotelPartners.Where(x => x.HotelPartnerStatus == true).OrderBy(x => x.HotelPartnerPosition).ToListAsync();
+
+
+            foreach (var partner in hotelPartners)
+            {
+                partner.HotelPartnerPhoto = _configuration["ImagesLink"] + partner.HotelPartnerPhoto;
+            }
+
+
+
             var sliders = await _context.TblSliders.Where(x => x.LangId == language.LangId && x.SliderStatus == true && x.IsDeleted == false && x.HotelId == hotel.HotelId).OrderBy(x => x.SliderPosition).ToListAsync();
             var slidersDto = _mapper.Map<List<GetSliders>>(sliders);
 
@@ -95,6 +105,12 @@ namespace HwaidakAPI.Controllers
             hotelDto.HotelRooms = hotelRooms != null ? _mapper.Map<List<GetRoom>>(hotelRooms) : null;
             hotelDto.HotelNews = hotelNews != null ? _mapper.Map<List<GetNewsList>>(hotelNews) : null;
             hotelDto.HotelNearBy = hotelNearBy != null ? _mapper.Map<List<GetHotelNearBy>>(hotelNearBy) : null;
+
+
+
+
+
+            hotelDto.HotelPartners = hotelPartners != null ? _mapper.Map<List<GetHotelPartners>>(hotelPartners) : null;
 
 
 
@@ -148,6 +164,7 @@ namespace HwaidakAPI.Controllers
 
             var hotel = await _context.VwHotels.Where(x => x.HotelUrl == hotelUrl && x.HotelStatus == true).FirstOrDefaultAsync();
             if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
+            var hotelSocials = await _context.TblHotelsSocialMedia.Where(x => x.SocialStatus == true && x.HotelId == hotel.HotelId).OrderBy(x => x.SocialPosition).ToListAsync();
 
             var groupLayout = await _context.TblGroupLayouts.FirstOrDefaultAsync();
 
@@ -162,9 +179,10 @@ namespace HwaidakAPI.Controllers
                 HotlFooter = _mapper.Map<GetHotelFooter>(hotel)
             };
             model.HotelHeader.ButtonGroupUrl = _configuration["ButtonGroupUrl"];
-            model.HotlFooter.GroupLogo = _configuration["ImagesLink"] + groupFooterDto.GroupLogo;
             model.HotelHeader.HotelLogo = _configuration["ImagesLink"] + model.HotelHeader.HotelLogo;
             model.HotelHeader.HotelLogoColored = _configuration["ImagesLink"] + model.HotelHeader.HotelLogoColored;
+            model.HotlFooter.GroupLogo = _configuration["ImagesLink"] + groupFooterDto.GroupLogo;
+            model.HotlFooter.Copyrights = groupFooterDto.Copyrights;
 
             foreach (var lang in languages)
             {
@@ -172,6 +190,17 @@ namespace HwaidakAPI.Controllers
                 {
                     LanguageName = lang.LanguageName,
                     LanguageAbbreviation = lang.LanguageAbbreviation
+                });
+            }
+
+            foreach (var social in hotelSocials)
+            {
+                model.HotlFooter.HotelSocials.Add(new GetHotelSocials
+                {
+                    SocialClass = social.SocialClass,
+                    SocialColor = social.SocialColor,
+                    SocialName = social.SocialName,
+                    SocialUrl = social.SocialUrl
                 });
             }
 

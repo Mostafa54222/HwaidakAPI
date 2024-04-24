@@ -8,5 +8,6 @@
         public string GroupHomeVideoSectionBannerMobile { get; set; }
         public string GroupHomeVideoSectionBannerTablet { get; set; }
         public string GroupHomeVideoUrl { get; set; }
+
     }
 }

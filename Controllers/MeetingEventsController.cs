@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HwaidakAPI.DTOs;
+using HwaidakAPI.DTOs.Responses.ContactUs;
 using HwaidakAPI.DTOs.Responses.Gyms;
 using HwaidakAPI.DTOs.Responses.MeetingEvents;
 using HwaidakAPI.DTOs.Responses.Restaurants;
@@ -53,6 +54,8 @@ namespace HwaidakAPI.Controllers
             var hotel = await _context.VwHotels.Where(x => x.HotelUrl == hotelUrl && x.HotelStatus == true && x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
 
+            var contactsDto = _mapper.Map<GetContactHotel>(hotel);
+
             // to do the phone and email
 
             MainResponse pagedetails = new MainResponse
@@ -69,22 +72,28 @@ namespace HwaidakAPI.Controllers
             var meetingEvent = await _context.VwMeetingsEvents.Where(x => x.HotelId == hotel.HotelId && x.LanguageAbbreviation == languageCode && x.FacilityStatus == true).OrderBy(x => x.FacilityPosition).ToListAsync();
             var meetingEventDto = _mapper.Map<List<GetMeetingEvent>>(meetingEvent);
 
+
+
             foreach (var meeting in meetingEventDto)
             {
                 meeting.FacilityPhoto = _configuration["ImagesLink"] + meeting.FacilityPhoto;
                 meeting.FacilityPhotoHome = _configuration["ImagesLink"] + meeting.FacilityPhotoHome;
+                meeting.HotelUrl = hotel.HotelUrl;
             }
 
             GetMeetingEventWithPageDetails model = new GetMeetingEventWithPageDetails
             {
                 PageDetails = pagedetails,
+                Email = contactsDto.HotelEmail,
+                Mobile = contactsDto.HotelPhone,
                 MeetingEvent = meetingEventDto
             };
+            
 
             return Ok(model);
         }
 
-        [HttpGet("getMeetingEventDetails{languageCode}/{hotelUrl}/{FacilityUrl}")]
+        [HttpGet("getMeetingEventDetails/{languageCode}/{hotelUrl}/{FacilityUrl}")]
         public async Task<ActionResult<IEnumerable<GetMeetingEventsDetails>>> GetMeetingEventsDetails(string hotelUrl, string FacilityUrl, string languageCode = "en")
         {
 
@@ -124,6 +133,8 @@ namespace HwaidakAPI.Controllers
                 {
                     othermeetings.FacilityPhotoHome = _configuration["ImagesLink"] + othermeetings.FacilityPhotoHome;
                     othermeetings.FacilityPhoto = _configuration["ImagesLink"] + othermeetings.FacilityPhoto;
+                    othermeetings.HotelUrl = hotel.HotelUrl;
+                    
                 }
             }
 
