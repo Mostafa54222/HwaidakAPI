@@ -49,5 +49,17 @@ public partial class TblGroupHomeContent
 
     public string GroupHomeSecondSectionButtonUrl { get; set; }
 
+    public string GroupGetDirectionLink { get; set; }
+
+    public string GroupGoogleMap { get; set; }
+
+    public string GroupContactUsIcon { get; set; }
+
+    public string GroupContactUsTitleTop { get; set; }
+
+    public string GroupContactUsTitle { get; set; }
+
+    public string GroupContactUsSummery { get; set; }
+
     public virtual TblGroupHome GroupHome { get; set; }
 }

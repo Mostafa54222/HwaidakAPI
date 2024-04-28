@@ -12,4 +12,8 @@ public partial class TblHotelPartner
     public bool? HotelPartnerStatus { get; set; }
 
     public int? HotelPartnerPosition { get; set; }
+
+    public int? HotelId { get; set; }
+
+    public virtual Hotel Hotel { get; set; }
 }

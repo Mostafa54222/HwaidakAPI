@@ -32,4 +32,8 @@ public partial class VwGroupFaq
     public string GroupFaqanswersSys { get; set; }
 
     public string GroupFaqquestionSys { get; set; }
+
+    public int? GroupFaqposition { get; set; }
+
+    public bool? GroupFaqstatus { get; set; }
 }

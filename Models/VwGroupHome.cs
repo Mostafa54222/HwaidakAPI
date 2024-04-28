@@ -88,4 +88,16 @@ public partial class VwGroupHome
     public int? GroupHomePhoto2Width { get; set; }
 
     public int? GroupHomePhoto2Height { get; set; }
+
+    public string GroupGetDirectionLink { get; set; }
+
+    public string GroupGoogleMap { get; set; }
+
+    public string GroupContactUsIcon { get; set; }
+
+    public string GroupContactUsTitleTop { get; set; }
+
+    public string GroupContactUsTitle { get; set; }
+
+    public string GroupContactUsSummery { get; set; }
 }

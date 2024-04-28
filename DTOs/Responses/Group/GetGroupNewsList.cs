@@ -1,4 +1,5 @@
-﻿using HwaidakAPI.DTOs.Responses.News;
+﻿using HwaidakAPI.DTOs.Responses.Group.GroupNews;
+using HwaidakAPI.DTOs.Responses.News;
 
 namespace HwaidakAPI.DTOs.Responses.Group
 {
@@ -6,6 +7,6 @@ namespace HwaidakAPI.DTOs.Responses.Group
     {
         public string GroupHomeNewsTitleTop { get; set; }
         public string GroupHomeNewsTitle { get; set; }
-        public List<GetNewsList> NewsList { get; set; } = [];
+        public List<GetGroupNews> NewsList { get; set; } = [];
     }
 }

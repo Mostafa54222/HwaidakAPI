@@ -14,4 +14,8 @@ public partial class TblGroupHomeIntroActivitiesContent
     public bool? GroupHomeIntoActivitiesStatusLang { get; set; }
 
     public string GroupHomeIntroActivitiesText { get; set; }
+
+    public string GroupHomeIntroActivitiesQuantity { get; set; }
+
+    public virtual TblGroupHomeIntroActivity GroupHomeIntroActivities { get; set; }
 }

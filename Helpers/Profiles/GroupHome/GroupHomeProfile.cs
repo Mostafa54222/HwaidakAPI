@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HwaidakAPI.DTOs.Responses.Group;
 using HwaidakAPI.DTOs.Responses.Group.GroupFAQ;
+using HwaidakAPI.DTOs.Responses.Group.GroupNews;
 using HwaidakAPI.Models;
 
 namespace HwaidakAPI.Helpers.Profiles.GroupHome
@@ -15,13 +16,21 @@ namespace HwaidakAPI.Helpers.Profiles.GroupHome
             CreateMap<VwGroupHomeVideoSection, GetGroupHomeVideo>();
 
             CreateMap<TblGroupSlider, GetGroupSlider>();
+            CreateMap<VwGroupHome, GetGroupContactUs>();
             CreateMap<TblGroupLayout, GetGroupHeader>();
             CreateMap<TblGroupLayout, GetGroupFooter>()
                 .ForMember(dest => dest.Copyrights, opt => opt.MapFrom(src => src.GroupCopyrights));
 
+
+
             CreateMap<TblGroupSocial, GetGroupSocials>();
+            CreateMap<VwHotel, GetGroupHotelList>();
 
             CreateMap<VwGroupFaq, GetGroupFAQList>();
+
+            CreateMap<VwGroupNews, GetGroupNews>();
+
+            CreateMap<VwHotel, GetHotelInfoForContactUs>();
         }
     }
 }

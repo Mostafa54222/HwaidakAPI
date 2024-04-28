@@ -55,7 +55,7 @@ namespace HwaidakAPI.Controllers
             var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
 
-            var hotelPartners = await _context.TblHotelPartners.Where(x => x.HotelPartnerStatus == true).OrderBy(x => x.HotelPartnerPosition).ToListAsync();
+            var hotelPartners = await _context.TblHotelPartners.Where(x => x.HotelId == hotel.HotelId && x.HotelPartnerStatus == true).OrderBy(x => x.HotelPartnerPosition).ToListAsync();
 
 
             foreach (var partner in hotelPartners)

@@ -13,10 +13,13 @@ namespace HwaidakAPI.Controllers
     {
         private readonly HwaidakHotelsWsdbContext _context;
         private readonly IMapper _mapper;
-        public NewsController(HwaidakHotelsWsdbContext context, IMapper mapper)
+        private readonly IConfiguration _configuration;
+
+        public NewsController(HwaidakHotelsWsdbContext context, IMapper mapper, IConfiguration configuration)
         {
             _context = context;
             _mapper = mapper;
+            _configuration = configuration;
         }
 
 
@@ -35,6 +38,7 @@ namespace HwaidakAPI.Controllers
 
             foreach (var news in NewsDto)
             {
+                news.NewsPhoto = _configuration["ImagesLink"] + news.NewsPhoto;
                 news.NewsDateTime = DateTime.Parse(news.NewsDateTime.ToString()).ToString("dd MMMM yyyy");
             }
 
@@ -50,10 +54,20 @@ namespace HwaidakAPI.Controllers
             var NewsDto = _mapper.Map<GetNewsDetails>(News);
 
             NewsDto.NewsDateTime = DateTime.Parse(NewsDto.NewsDateTime.ToString()).ToString("dd MMMM yyyy");
-
+            NewsDto.NewsPhoto = _configuration["ImagesLink"] + NewsDto.NewsPhoto;
 
 
             NewsDto.NewsGallery = NewsGallery != null ? _mapper.Map<List<GetNewsGallery>>(NewsGallery) : null;
+
+
+            if (NewsDto.NewsGallery != null)
+            {
+
+                foreach (var newsgalleries in NewsDto.NewsGallery)
+                {
+                    newsgalleries.PhotoFile = _configuration["ImagesLink"] + newsgalleries.PhotoFile;
+                }
+            }
 
             return Ok(NewsDto);
         }

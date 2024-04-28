@@ -1,11 +1,11 @@
-﻿using HwaidakAPI.DTOs.Responses.Hotels;
-
-namespace HwaidakAPI.DTOs.Responses.Group
+﻿namespace HwaidakAPI.DTOs.Responses.Group
 {
     public class GetGroupHotelList
     {
-        public string GroupHomeHotelTitleTop { get; set; }
-        public string GroupHomeHotelTitle { get; set; }
-        public List<GetHotelList> Hotels { get; set; } = [];
+        public string HotelName { get; set; }
+        public string HotelUrl { get; set; }
+        public string HotelLogo { get; set; }
+        public string HotelLogoColored { get; set; }
+        public string HotelPhotoGroup { get; set; }
     }
 }

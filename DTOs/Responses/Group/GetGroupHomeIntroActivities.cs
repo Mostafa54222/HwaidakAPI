@@ -4,7 +4,8 @@
     {
         public string GroupHomeIntroActivitiesText { get; set; }
 
-        public string GroupHomeIntroActivitiesNumber { get; set; }
+        public int? GroupHomeIntroActivitiesNumber { get; set; }
+        public string GroupHomeIntroActivitiesQuantity { get; set; }
 
     }
 }

@@ -784,4 +784,12 @@ public partial class Hotel
     public int? HotelWellnessBannerMobileWidth { get; set; }
 
     public int? HotelWellnessBannerMobileHieght { get; set; }
+
+    public string HotelPhotoGroup { get; set; }
+
+    public int? HotelPhotoGroupWidth { get; set; }
+
+    public int? HotelPhotoGroupHeight { get; set; }
+
+    public virtual ICollection<TblHotelPartner> TblHotelPartners { get; set; } = new List<TblHotelPartner>();
 }

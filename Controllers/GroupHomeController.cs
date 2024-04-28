@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using HwaidakAPI.DTOs;
+using HwaidakAPI.DTOs.Responses.ContactUs;
 using HwaidakAPI.DTOs.Responses.Group;
 using HwaidakAPI.DTOs.Responses.Group.GroupFAQ;
+using HwaidakAPI.DTOs.Responses.Group.GroupNews;
 using HwaidakAPI.DTOs.Responses.Home;
 using HwaidakAPI.DTOs.Responses.Hotels;
 using HwaidakAPI.Errors;
@@ -45,14 +47,23 @@ namespace HwaidakAPI.Controllers
 
 
             var hotels = await _context.VwHotels.Where(x => x.HotelStatus == true && x.LanguageAbbreviation == languageCode).ToListAsync();
-            var hotelDtos = _mapper.Map<List<GetHotelList>>(hotels);
+            var hotelDtos = _mapper.Map<List<GetGroupHotelList>>(hotels);
 
 
             var groupHome = await _context.VwGroupHomes.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             var groupHomeDto = _mapper.Map<GetGroupHome>(groupHome);
 
 
+            var groupNews = await _context.VwGroupNews.Where(x => x.LanguageAbbreviation == languageCode && x.NewsStatus == true).ToListAsync();
+            var groupNewsDto = _mapper.Map<List<GetGroupNews>>(groupNews);
 
+            if (groupNewsDto != null)
+            {
+                foreach (var news in groupNewsDto)
+                {
+                    news.NewsPhoto = _configuration["ImagesLink"] + news.NewsPhoto;
+                }
+            }
 
             if (groupSlidersDto != null)
             {
@@ -65,14 +76,11 @@ namespace HwaidakAPI.Controllers
             {
                 foreach (var hotel in hotelDtos)
                 {
-                    hotel.HotelPhoto = _configuration["ImagesLink"] + hotel.HotelPhoto;
+                    hotel.HotelPhotoGroup = _configuration["ImagesLink"] + hotel.HotelPhotoGroup;
                     hotel.HotelLogo = _configuration["ImagesLink"] + hotel.HotelLogo;
+                    hotel.HotelLogoColored = _configuration["ImagesLink"] + hotel.HotelLogoColored;
                 }
             }
-
-            groupHomeDto.GroupHomePhoto1 = _configuration["ImagesLink"] + groupHomeDto.GroupHomePhoto1;
-            groupHomeDto.GroupHomePhoto2 = _configuration["ImagesLink"] + groupHomeDto.GroupHomePhoto2;
-
 
 
             GetGroupHomeIntro homeIntro = new()
@@ -105,7 +113,7 @@ namespace HwaidakAPI.Controllers
                 GroupHomeVideoUrl = groupHomeDto.GroupHomeVideoUrl
             };
 
-            GetGroupHotelList groupHotelList = new() 
+            GetGroupHotelListResponse groupHotelList = new() 
             { 
                 GroupHomeHotelTitle = groupHomeDto.GroupHomeHotelTitle,
                 GroupHomeHotelTitleTop = groupHomeDto.GroupHomeHotelTitleTop,
@@ -117,6 +125,7 @@ namespace HwaidakAPI.Controllers
             {
                 GroupHomeNewsTitle = groupHomeDto.GroupHomeNewsTitle,
                 GroupHomeNewsTitleTop = groupHomeDto.GroupHomeNewsTitleTop,
+                NewsList = groupNewsDto
             };
 
 
@@ -138,6 +147,7 @@ namespace HwaidakAPI.Controllers
         public async Task<ActionResult<GetGroupFAQResponse>> GetGroupFAQs(string languageCode = "en")
         {
             var pageContent = await _context.VwGroupPages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
+
             MainResponse pageDetails = new()
             {
                 PageTitle = pageContent.GroupFaqTitle,
@@ -160,6 +170,37 @@ namespace HwaidakAPI.Controllers
         }
 
 
+
+
+        [HttpGet("GroupContactUs/{languageCode}")]
+        public async Task<ActionResult<GetGroupContactUsResponse>> GetGroupContactUs(string languageCode = "en")
+        {
+            var pageContent = await _context.VwGroupPages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
+            MainResponse pageDetails = new()
+            {
+                PageTitle = pageContent.GroupContactUsTitle,
+                PageText = pageContent.GroupContactUs,
+                PageBannerPC = _configuration["ImagesLink"] + pageContent.GroupContactUsBanner,
+                PageBannerTablet = _configuration["ImagesLink"] + pageContent.GroupContactUsBannerTablet,
+                PageBannerMobile = _configuration["ImagesLink"] + pageContent.GroupContactUsBannerMobile,
+                PageMetatagTitle = pageContent.GroupContactUsMetatagTitle,
+                PageMetatagDescription = pageContent.GroupContactUsMetatagDescription
+            };
+
+            var hotel = await _context.VwHotels.Where(x => x.HotelStatus == true && x.LanguageAbbreviation == languageCode).ToListAsync();
+            if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
+
+
+            var contactsDto = _mapper.Map<List<GetHotelInfoForContactUs>>(hotel);
+
+
+            GetGroupContactUsResponse model = new()
+            {
+                PageDetails = pageDetails,
+                HotelsContact = contactsDto
+            };
+            return Ok(model);
+        }
 
 
 

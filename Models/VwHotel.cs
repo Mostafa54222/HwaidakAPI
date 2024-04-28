@@ -1050,4 +1050,10 @@ public partial class VwHotel
     public string HotelContactUsTitle { get; set; }
 
     public string HotelContactUsSummery { get; set; }
+
+    public string HotelPhotoGroup { get; set; }
+
+    public int? HotelPhotoGroupWidth { get; set; }
+
+    public int? HotelPhotoGroupHeight { get; set; }
 }

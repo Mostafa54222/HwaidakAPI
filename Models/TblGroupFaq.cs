@@ -11,5 +11,9 @@ public partial class TblGroupFaq
 
     public string GroupFaqanswersSys { get; set; }
 
+    public int? GroupFaqposition { get; set; }
+
+    public bool? GroupFaqstatus { get; set; }
+
     public virtual ICollection<TblGroupFaqcontent> TblGroupFaqcontents { get; set; } = new List<TblGroupFaqcontent>();
 }
