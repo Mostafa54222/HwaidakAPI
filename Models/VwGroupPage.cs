@@ -95,8 +95,6 @@ public partial class VwGroupPage
 
     public string GroupNewsMetatagDescription { get; set; }
 
-    public int Expr1 { get; set; }
-
     public string GroupTermsBanner { get; set; }
 
     public int? GroupTermsBannerWidth { get; set; }
@@ -262,4 +260,6 @@ public partial class VwGroupPage
     public string MetatagTitle { get; set; }
 
     public string MetatagDescription { get; set; }
+
+    public int GroupPagesId { get; set; }
 }

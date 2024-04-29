@@ -4910,6 +4910,7 @@ public partial class HwaidakHotelsWsdbContext : DbContext
                 .HasColumnName("GroupNews_Title");
             entity.Property(e => e.GroupOverview).HasColumnType("ntext");
             entity.Property(e => e.GroupPagesContentId).HasColumnName("GroupPagesContentID");
+            entity.Property(e => e.GroupPagesId).HasColumnName("GroupPagesID");
             entity.Property(e => e.GroupPrivacy).HasColumnType("ntext");
             entity.Property(e => e.GroupPrivacyBanner)
                 .HasMaxLength(250)
