@@ -5,6 +5,8 @@ namespace HwaidakAPI.DTOs.Responses.Group
 {
     public class GetGroupResponse
     {
+        public string MetatagTitle { get; set; }
+        public string MetatagDescription { get; set; }
         public List<GetGroupSlider> GroupSliders { get; set; } = [];
         public GetGroupHomeIntro GroupHomeIntro { get; set; }
         public GetGroupHotelListResponse Hotels { get; set; }

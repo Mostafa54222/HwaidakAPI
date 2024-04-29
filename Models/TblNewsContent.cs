@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace HwaidakAPI.Models;
 
-public partial class TblGroupNewsContent
+public partial class TblNewsContent
 {
     public int NewsContentId { get; set; }
 
@@ -21,5 +21,5 @@ public partial class TblGroupNewsContent
 
     public string NewsDateTime { get; set; }
 
-    public virtual TblGroupNews News { get; set; }
+    public virtual TblNews News { get; set; }
 }

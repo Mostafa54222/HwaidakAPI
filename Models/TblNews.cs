@@ -13,13 +13,7 @@ public partial class TblNews
 
     public bool? NewsStatus { get; set; }
 
-    public DateTime? NewsDateTime { get; set; }
-
     public string NewsUrl { get; set; }
-
-    public string NewsShortDescription { get; set; }
-
-    public string NewsDetails { get; set; }
 
     public int? LangId { get; set; }
 
@@ -52,4 +46,6 @@ public partial class TblNews
     public int? NewsItemBannerMobileWidth { get; set; }
 
     public int? NewsItemBannerMobileHieght { get; set; }
+
+    public virtual ICollection<TblNewsContent> TblNewsContents { get; set; } = new List<TblNewsContent>();
 }

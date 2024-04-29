@@ -38,12 +38,16 @@ namespace HwaidakAPI.DTOs.Responses.Hotels
         public string HotelNear { get; set; }
 
         public string HotelNearTitle { get; set; }
-        //public GetHotelHeader HotelHeader { get; set; }
+
+
+        public string MetatagTitle { get; set; }
+
+        public string MetatagDescription { get; set; }
+
 
         public List<GetSliders> Sliders { get; set; }
         public List<GetHotelPartners> HotelPartners { get; set; }
 
-        //public List<GetHotelGallery> HotelGallery { get; set; } = [];
         public List<GetHotelNearBy> HotelNearBy { get; set; }
         public List<GetRoom> HotelRooms { get; set; } = [];
         public List<GetFacility> HotelFacilities { get; set; } = [];

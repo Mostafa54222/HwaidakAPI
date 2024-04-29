@@ -122,4 +122,6 @@ public partial class TblHomeContent
     public string SectionNewsLetterBtn { get; set; }
 
     public string SectionNewsLetterBtnPlaceholder { get; set; }
+
+    public virtual TblHome Home { get; set; }
 }

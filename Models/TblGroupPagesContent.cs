@@ -87,5 +87,9 @@ public partial class TblGroupPagesContent
 
     public string GroupNewsMetatagDescription { get; set; }
 
+    public string MetatagTitle { get; set; }
+
+    public string MetatagDescription { get; set; }
+
     public virtual TblGroupPage GroupPages { get; set; }
 }

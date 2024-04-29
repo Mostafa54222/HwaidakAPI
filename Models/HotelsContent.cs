@@ -244,4 +244,8 @@ public partial class HotelsContent
     public string HotelContactUsTitle { get; set; }
 
     public string HotelContactUsSummery { get; set; }
+
+    public string MetatagTitle { get; set; }
+
+    public string MetatagDescription { get; set; }
 }

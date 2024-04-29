@@ -258,4 +258,8 @@ public partial class VwGroupPage
     public int? GroupNewsBannerTabletWidth { get; set; }
 
     public int? GroupNewsBannerTabletHeight { get; set; }
+
+    public string MetatagTitle { get; set; }
+
+    public string MetatagDescription { get; set; }
 }

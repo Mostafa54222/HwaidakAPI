@@ -5,6 +5,28 @@ namespace HwaidakAPI.Models;
 
 public partial class VwNews
 {
+    public int LangId { get; set; }
+
+    public string LanguageFlag { get; set; }
+
+    public string LanguageName { get; set; }
+
+    public string LanguageAbbreviation { get; set; }
+
+    public bool? LangStatus { get; set; }
+
+    public int NewsContentId { get; set; }
+
+    public bool? NewsStatusLang { get; set; }
+
+    public string NewsTitle { get; set; }
+
+    public string NewsShortDescription { get; set; }
+
+    public string NewsDetails { get; set; }
+
+    public string NewsDateTime { get; set; }
+
     public int NewsId { get; set; }
 
     public string NewsTitleSys { get; set; }
@@ -13,23 +35,7 @@ public partial class VwNews
 
     public bool? NewsStatus { get; set; }
 
-    public DateTime? NewsDateTime { get; set; }
-
     public string NewsUrl { get; set; }
-
-    public string NewsShortDescription { get; set; }
-
-    public string NewsDetails { get; set; }
-
-    public int? LangId { get; set; }
-
-    public string LanguageName { get; set; }
-
-    public string LanguageFlag { get; set; }
-
-    public string LanguageAbbreviation { get; set; }
-
-    public bool? LangStatus { get; set; }
 
     public bool? IsDeleted { get; set; }
 

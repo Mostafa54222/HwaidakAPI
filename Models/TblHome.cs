@@ -68,4 +68,6 @@ public partial class TblHome
     public int? HotelId { get; set; }
 
     public string SectionNewsLetterPhoto { get; set; }
+
+    public virtual ICollection<TblHomeContent> TblHomeContents { get; set; } = new List<TblHomeContent>();
 }

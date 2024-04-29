@@ -1056,4 +1056,8 @@ public partial class VwHotel
     public int? HotelPhotoGroupWidth { get; set; }
 
     public int? HotelPhotoGroupHeight { get; set; }
+
+    public string MetatagTitle { get; set; }
+
+    public string MetatagDescription { get; set; }
 }

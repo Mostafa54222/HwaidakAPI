@@ -29,8 +29,8 @@ namespace HwaidakAPI.Controllers
             if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
 
 
-            var gallerySections = await _context.VwGalleries.Where(x => x.LanguageAbbreviation == languageCode && x.HotelUrl == hotelUrl && x.GalleryStatus == true).ToListAsync();
-            var galleryPhotos = await _context.VwGalleryPhotos.Where(x => x.LanguageAbbreviation == languageCode && x.PhotoStatus == true && x.GalleryStatus == true).ToListAsync();
+            var gallerySections = await _context.VwGalleries.Where(x => x.LanguageAbbreviation == languageCode && x.HotelUrl == hotelUrl && x.GalleryStatus == true).OrderBy(x => x.GalleryPosition).ToListAsync();
+            var galleryPhotos = await _context.VwGalleryPhotos.Where(x => x.LanguageAbbreviation == languageCode && x.PhotoStatus == true && x.GalleryStatus == true).OrderBy(x => x.PhotoPosition).ToListAsync();
             var gallerySectionDto = _mapper.Map<List<GetGallerySections>>(gallerySections);
             var galleryPhotosDto = _mapper.Map<List<GetGalleryPhotos>>(galleryPhotos);
 

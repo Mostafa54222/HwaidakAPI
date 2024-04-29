@@ -76,7 +76,7 @@ namespace HwaidakAPI.Controllers
 
             var facilities = await _context.VwFacilities.Where(x => x.LanguageAbbreviation == languageCode && x.HotelUrl == hotelurl && x.FacilityStatus == true && x.IsDeleted == false).ToListAsync();
             var hotelRooms = await _context.VwRooms.Where(x => x.HotelId == hotel.HotelId && x.LanguageAbbreviation == languageCode && x.RoomStatus == true).OrderBy(x => x.RoomPosition).ToListAsync();
-            var hotelNews = await _context.VwNews.Where(x => x.HotelId == hotel.HotelId && x.LanguageAbbreviation == languageCode && x.NewsStatus == true).ToListAsync();
+            var hotelNews = await _context.VwNews.Where(x => x.HotelId == hotel.HotelId && x.LanguageAbbreviation == languageCode && x.NewsStatus == true).OrderByDescending(x => x.NewsId).ToListAsync();
             var hotelNearBy = await _context.VwHotelsNearBies.Where(x => x.HotelId == hotel.HotelId && x.LanguageAbbreviation == languageCode && x.HotelNearByStatus == true).ToListAsync();
 
 
@@ -117,7 +117,8 @@ namespace HwaidakAPI.Controllers
 
             foreach (var news in hotelDto.HotelNews)
             {
-                news.NewsDateTime = DateTime.Parse(news.NewsDateTime.ToString()).ToString("dd MMMM yyyy");
+                if(news.NewsDateTime != null && news.NewsDateTime != "")
+                    news.NewsDateTime = DateTime.Parse(news.NewsDateTime.ToString()).ToString("dd MMMM yyyy");
             }
 
             if (hotelDto.HotelFacilities != null)

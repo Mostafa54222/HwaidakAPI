@@ -34,6 +34,8 @@ namespace HwaidakAPI.Controllers
             var language = await _context.MasterLanguages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             if (language == null) return NotFound(new ApiResponse(404, "this language doesnt exist"));
 
+
+            var gropPages = await _context.VwGroupPages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             
 
 
@@ -54,7 +56,7 @@ namespace HwaidakAPI.Controllers
             var groupHomeDto = _mapper.Map<GetGroupHome>(groupHome);
 
 
-            var groupNews = await _context.VwGroupNews.Where(x => x.LanguageAbbreviation == languageCode && x.NewsStatus == true).ToListAsync();
+            var groupNews = await _context.VwGroupNews.Where(x => x.LanguageAbbreviation == languageCode && x.NewsStatus == true).OrderByDescending(x => x.NewsId).ToListAsync();
             var groupNewsDto = _mapper.Map<List<GetGroupNews>>(groupNews);
 
             if (groupNewsDto != null)
@@ -62,6 +64,8 @@ namespace HwaidakAPI.Controllers
                 foreach (var news in groupNewsDto)
                 {
                     news.NewsPhoto = _configuration["ImagesLink"] + news.NewsPhoto;
+                    news.NewsDateTime = DateTime.Parse(news.NewsDateTime.ToString()).ToString("dd MMMM yyyy");
+
                 }
             }
 
@@ -131,6 +135,8 @@ namespace HwaidakAPI.Controllers
 
             GetGroupResponse model = new()
             {
+                MetatagTitle = gropPages.MetatagTitle,
+                MetatagDescription = gropPages.MetatagDescription,
                 GroupSliders = groupSlidersDto,
                 GroupHomeIntro = homeIntro,
                 Hotels = groupHotelList,

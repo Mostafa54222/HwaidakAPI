@@ -205,6 +205,8 @@ public partial class HwaidakHotelsWsdbContext : DbContext
 
     public virtual DbSet<TblNews> TblNews { get; set; }
 
+    public virtual DbSet<TblNewsContent> TblNewsContents { get; set; }
+
     public virtual DbSet<TblNewsGallery> TblNewsGalleries { get; set; }
 
     public virtual DbSet<TblOffer> TblOffers { get; set; }
@@ -283,8 +285,6 @@ public partial class HwaidakHotelsWsdbContext : DbContext
 
     public virtual DbSet<VwGroupNews> VwGroupNews { get; set; }
 
-    public virtual DbSet<VwGroupNews1> VwGroupNews1 { get; set; }
-
     public virtual DbSet<VwGroupPage> VwGroupPages { get; set; }
 
     public virtual DbSet<VwGym> VwGyms { get; set; }
@@ -356,6 +356,7 @@ public partial class HwaidakHotelsWsdbContext : DbContext
     public virtual DbSet<VwSpaServicesType> VwSpaServicesTypes { get; set; }
 
     public virtual DbSet<VwTeam> VwTeams { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
@@ -372,7 +373,6 @@ public partial class HwaidakHotelsWsdbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
         modelBuilder.HasDefaultSchema("titDevusrWSDB2024");
 
         modelBuilder.Entity<CountriesContent>(entity =>
@@ -1682,6 +1682,8 @@ public partial class HwaidakHotelsWsdbContext : DbContext
                 .HasColumnType("ntext")
                 .HasColumnName("HotelWellness_Title");
             entity.Property(e => e.LangId).HasColumnName("LangID");
+            entity.Property(e => e.MetatagDescription).HasMaxLength(250);
+            entity.Property(e => e.MetatagTitle).HasMaxLength(250);
         });
 
         modelBuilder.Entity<MasterLanguage>(entity =>
@@ -2479,9 +2481,6 @@ public partial class HwaidakHotelsWsdbContext : DbContext
             entity.Property(e => e.LangId)
                 .HasDefaultValue(1)
                 .HasColumnName("LangID");
-            entity.Property(e => e.NewsDateTime)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("smalldatetime");
             entity.Property(e => e.NewsItemBanner).HasMaxLength(250);
             entity.Property(e => e.NewsItemBannerMobile)
                 .HasMaxLength(250)
@@ -2513,6 +2512,9 @@ public partial class HwaidakHotelsWsdbContext : DbContext
 
             entity.Property(e => e.NewsContentId).HasColumnName("NewsContentID");
             entity.Property(e => e.LangId).HasColumnName("LangID");
+            entity.Property(e => e.NewsDateTime)
+                .HasMaxLength(250)
+                .HasDefaultValueSql("(getdate())");
             entity.Property(e => e.NewsDetails).HasMaxLength(250);
             entity.Property(e => e.NewsId).HasColumnName("NewsID");
             entity.Property(e => e.NewsShortDescription).HasMaxLength(250);
@@ -2771,6 +2773,8 @@ public partial class HwaidakHotelsWsdbContext : DbContext
                 .HasColumnType("ntext")
                 .HasColumnName("GroupTerms_Title");
             entity.Property(e => e.LangId).HasColumnName("LangID");
+            entity.Property(e => e.MetatagDescription).HasMaxLength(250);
+            entity.Property(e => e.MetatagTitle).HasMaxLength(250);
 
             entity.HasOne(d => d.GroupPages).WithMany(p => p.TblGroupPagesContents)
                 .HasForeignKey(d => d.GroupPagesId)
@@ -2924,7 +2928,7 @@ public partial class HwaidakHotelsWsdbContext : DbContext
         {
             entity.HasKey(e => e.HomeId);
 
-            entity.ToTable("tbl_Home", "dbo");
+            entity.ToTable("tbl_Home", "dbo", tb => tb.HasTrigger("Home_Content_trigger"));
 
             entity.Property(e => e.HomeId).HasColumnName("HomeID");
             entity.Property(e => e.AboutUsPhoto).HasMaxLength(250);
@@ -3047,6 +3051,11 @@ public partial class HwaidakHotelsWsdbContext : DbContext
             entity.Property(e => e.SectionWelcomeTitleText).HasColumnType("ntext");
             entity.Property(e => e.SectionWhyChooseUsText).HasMaxLength(250);
             entity.Property(e => e.SectionWhyChooseUsTittle).HasMaxLength(250);
+
+            entity.HasOne(d => d.Home).WithMany(p => p.TblHomeContents)
+                .HasForeignKey(d => d.HomeId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_tbl_Home_Content_tbl_Home");
         });
 
         modelBuilder.Entity<TblHomeDiscover>(entity =>
@@ -3670,7 +3679,11 @@ public partial class HwaidakHotelsWsdbContext : DbContext
         {
             entity.HasKey(e => e.NewsId);
 
-            entity.ToTable("tbl_News", "dbo", tb => tb.HasTrigger("NewsURL"));
+            entity.ToTable("tbl_News", "dbo", tb =>
+                {
+                    tb.HasTrigger("NewsURL");
+                    tb.HasTrigger("News_Content_trigger");
+                });
 
             entity.Property(e => e.NewsId).HasColumnName("NewsID");
             entity.Property(e => e.CreationDate)
@@ -3682,10 +3695,6 @@ public partial class HwaidakHotelsWsdbContext : DbContext
             entity.Property(e => e.LangId)
                 .HasDefaultValue(1)
                 .HasColumnName("LangID");
-            entity.Property(e => e.NewsDateTime)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("smalldatetime");
-            entity.Property(e => e.NewsDetails).HasColumnType("ntext");
             entity.Property(e => e.NewsItemBanner).HasMaxLength(250);
             entity.Property(e => e.NewsItemBannerMobile)
                 .HasMaxLength(250)
@@ -3700,7 +3709,6 @@ public partial class HwaidakHotelsWsdbContext : DbContext
             entity.Property(e => e.NewsItemBannerTabletHieght).HasColumnName("NewsItemBanner_TabletHieght");
             entity.Property(e => e.NewsItemBannerTabletWidth).HasColumnName("NewsItemBanner_TabletWidth");
             entity.Property(e => e.NewsPhoto).HasMaxLength(250);
-            entity.Property(e => e.NewsShortDescription).HasColumnType("ntext");
             entity.Property(e => e.NewsStatus).HasDefaultValue(true);
             entity.Property(e => e.NewsTitleSys)
                 .HasMaxLength(250)
@@ -3708,6 +3716,28 @@ public partial class HwaidakHotelsWsdbContext : DbContext
             entity.Property(e => e.NewsUrl)
                 .HasMaxLength(250)
                 .HasColumnName("NewsURL");
+        });
+
+        modelBuilder.Entity<TblNewsContent>(entity =>
+        {
+            entity.HasKey(e => e.NewsContentId);
+
+            entity.ToTable("tbl_NewsContent", "dbo");
+
+            entity.Property(e => e.NewsContentId).HasColumnName("NewsContentID");
+            entity.Property(e => e.LangId).HasColumnName("LangID");
+            entity.Property(e => e.NewsDateTime)
+                .HasMaxLength(250)
+                .HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.NewsDetails).HasMaxLength(250);
+            entity.Property(e => e.NewsId).HasColumnName("NewsID");
+            entity.Property(e => e.NewsShortDescription).HasMaxLength(250);
+            entity.Property(e => e.NewsTitle).HasMaxLength(250);
+
+            entity.HasOne(d => d.News).WithMany(p => p.TblNewsContents)
+                .HasForeignKey(d => d.NewsId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_tbl_NewsContent_tbl_News");
         });
 
         modelBuilder.Entity<TblNewsGallery>(entity =>
@@ -4668,48 +4698,7 @@ public partial class HwaidakHotelsWsdbContext : DbContext
             entity.Property(e => e.LanguageFlag).HasMaxLength(250);
             entity.Property(e => e.LanguageName).HasMaxLength(250);
             entity.Property(e => e.NewsContentId).HasColumnName("NewsContentID");
-            entity.Property(e => e.NewsDateTime).HasColumnType("smalldatetime");
-            entity.Property(e => e.NewsDetails).HasMaxLength(250);
-            entity.Property(e => e.NewsId).HasColumnName("NewsID");
-            entity.Property(e => e.NewsItemBanner).HasMaxLength(250);
-            entity.Property(e => e.NewsItemBannerMobile)
-                .HasMaxLength(250)
-                .HasColumnName("NewsItemBanner_Mobile");
-            entity.Property(e => e.NewsItemBannerMobileHieght).HasColumnName("NewsItemBanner_MobileHieght");
-            entity.Property(e => e.NewsItemBannerMobileWidth).HasColumnName("NewsItemBanner_MobileWidth");
-            entity.Property(e => e.NewsItemBannerPhotoHieght).HasColumnName("NewsItemBannerPhoto_Hieght");
-            entity.Property(e => e.NewsItemBannerPhotoWidth).HasColumnName("NewsItemBannerPhoto_Width");
-            entity.Property(e => e.NewsItemBannerTablet)
-                .HasMaxLength(250)
-                .HasColumnName("NewsItemBanner_Tablet");
-            entity.Property(e => e.NewsItemBannerTabletHieght).HasColumnName("NewsItemBanner_TabletHieght");
-            entity.Property(e => e.NewsItemBannerTabletWidth).HasColumnName("NewsItemBanner_TabletWidth");
-            entity.Property(e => e.NewsPhoto).HasMaxLength(250);
-            entity.Property(e => e.NewsShortDescription).HasMaxLength(250);
-            entity.Property(e => e.NewsTitle).HasMaxLength(250);
-            entity.Property(e => e.NewsTitleSys)
-                .HasMaxLength(250)
-                .HasColumnName("NewsTitleSYS");
-            entity.Property(e => e.NewsUrl)
-                .HasMaxLength(250)
-                .HasColumnName("NewsURL");
-        });
-
-        modelBuilder.Entity<VwGroupNews1>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToView("vw_GroupNews");
-
-            entity.Property(e => e.CreationDate).HasColumnType("smalldatetime");
-            entity.Property(e => e.DeletedDate).HasColumnType("smalldatetime");
-            entity.Property(e => e.LangId).HasColumnName("LangID");
-            entity.Property(e => e.LanguageAbbreviation).HasMaxLength(250);
-            entity.Property(e => e.LanguageClass).HasMaxLength(250);
-            entity.Property(e => e.LanguageFlag).HasMaxLength(250);
-            entity.Property(e => e.LanguageName).HasMaxLength(250);
-            entity.Property(e => e.NewsContentId).HasColumnName("NewsContentID");
-            entity.Property(e => e.NewsDateTime).HasColumnType("smalldatetime");
+            entity.Property(e => e.NewsDateTime).HasMaxLength(250);
             entity.Property(e => e.NewsDetails).HasMaxLength(250);
             entity.Property(e => e.NewsId).HasColumnName("NewsID");
             entity.Property(e => e.NewsItemBanner).HasMaxLength(250);
@@ -4977,6 +4966,8 @@ public partial class HwaidakHotelsWsdbContext : DbContext
             entity.Property(e => e.LanguageClass).HasMaxLength(250);
             entity.Property(e => e.LanguageFlag).HasMaxLength(250);
             entity.Property(e => e.LanguageName).HasMaxLength(250);
+            entity.Property(e => e.MetatagDescription).HasMaxLength(250);
+            entity.Property(e => e.MetatagTitle).HasMaxLength(250);
         });
 
         modelBuilder.Entity<VwGym>(entity =>
@@ -6354,6 +6345,8 @@ public partial class HwaidakHotelsWsdbContext : DbContext
             entity.Property(e => e.LangIdmasterHotelTypes).HasColumnName("LangIDMasterHotelTypes");
             entity.Property(e => e.LanguageAbbreviation).HasMaxLength(250);
             entity.Property(e => e.LanguageName).HasMaxLength(250);
+            entity.Property(e => e.MetatagDescription).HasMaxLength(250);
+            entity.Property(e => e.MetatagTitle).HasMaxLength(250);
             entity.Property(e => e.ReservationEmail).HasMaxLength(250);
             entity.Property(e => e.TripAdvisorKey).HasMaxLength(250);
             entity.Property(e => e.TripAdvisorUrl)
@@ -6718,8 +6711,9 @@ public partial class HwaidakHotelsWsdbContext : DbContext
             entity.Property(e => e.LanguageAbbreviation).HasMaxLength(250);
             entity.Property(e => e.LanguageFlag).HasMaxLength(250);
             entity.Property(e => e.LanguageName).HasMaxLength(250);
-            entity.Property(e => e.NewsDateTime).HasColumnType("smalldatetime");
-            entity.Property(e => e.NewsDetails).HasColumnType("ntext");
+            entity.Property(e => e.NewsContentId).HasColumnName("NewsContentID");
+            entity.Property(e => e.NewsDateTime).HasMaxLength(250);
+            entity.Property(e => e.NewsDetails).HasMaxLength(250);
             entity.Property(e => e.NewsId).HasColumnName("NewsID");
             entity.Property(e => e.NewsItemBanner).HasMaxLength(250);
             entity.Property(e => e.NewsItemBannerMobile)
@@ -6735,7 +6729,8 @@ public partial class HwaidakHotelsWsdbContext : DbContext
             entity.Property(e => e.NewsItemBannerTabletHieght).HasColumnName("NewsItemBanner_TabletHieght");
             entity.Property(e => e.NewsItemBannerTabletWidth).HasColumnName("NewsItemBanner_TabletWidth");
             entity.Property(e => e.NewsPhoto).HasMaxLength(250);
-            entity.Property(e => e.NewsShortDescription).HasColumnType("ntext");
+            entity.Property(e => e.NewsShortDescription).HasMaxLength(250);
+            entity.Property(e => e.NewsTitle).HasMaxLength(250);
             entity.Property(e => e.NewsTitleSys)
                 .HasMaxLength(250)
                 .HasColumnName("NewsTitleSYS");

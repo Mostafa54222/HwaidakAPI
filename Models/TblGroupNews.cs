@@ -13,8 +13,6 @@ public partial class TblGroupNews
 
     public bool? NewsStatus { get; set; }
 
-    public DateTime? NewsDateTime { get; set; }
-
     public string NewsUrl { get; set; }
 
     public int? LangId { get; set; }

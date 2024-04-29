@@ -29,12 +29,27 @@ namespace HwaidakAPI.Controllers
 
 
         [HttpGet("{languageCode}")]
-        public async Task<ActionResult<IEnumerable<GetMeetingEvent>>> GetMeetingEvents(string languageCode = "en")
+        public async Task<ActionResult<IEnumerable<GetMeetingEventWithPageDetails>>> GetMeetingEvents(string languageCode = "en")
         {
-            
-            var meetingEvent = await _context.VwMeetingsEvents.Where(x => x.LanguageAbbreviation == languageCode && x.FacilityStatus==true && x.IsDeleted==false).ToListAsync();
-            var meetingEventDto = _mapper.Map<IEnumerable<GetMeetingEvent>>(meetingEvent);
+            var groupPage = await _context.VwGroupPages.Where(x => x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
+            if (groupPage == null) return NotFound(new ApiResponse(404, "there is no group with this name"));
 
+
+            var groupContact = await _context.TblGroupLayouts.FirstOrDefaultAsync();
+
+            var meetingEvent = await _context.VwMeetingsEvents.Where(x => x.LanguageAbbreviation == languageCode && x.FacilityStatus==true && x.IsDeleted==false).ToListAsync();
+            var meetingEventDto = _mapper.Map<List<GetMeetingEvent>>(meetingEvent);
+
+            MainResponse pagedetails = new MainResponse
+            {
+                PageTitle = groupPage.GroupMeetingEventsTitle,
+                PageBannerPC = _configuration["ImagesLink"] + groupPage.GroupMeetingEventsBanner,
+                PageBannerMobile = _configuration["ImagesLink"] + groupPage.GroupMeetingEventsBannerMobile,
+                PageBannerTablet = _configuration["ImagesLink"] + groupPage.GroupMeetingEventsBannerTablet,
+                PageText = groupPage.GroupMeetingEvents,
+                PageMetatagTitle = groupPage.GroupMeetingEventsMetatagTitle,
+                PageMetatagDescription = groupPage.GroupMeetingEventsMetatagDescription
+            };
 
             foreach (var meeting in meetingEventDto)
             {
@@ -44,7 +59,16 @@ namespace HwaidakAPI.Controllers
                 meeting.FacilityPhotoHome = _configuration["ImagesLink"] + meeting.FacilityPhotoHome;
                 meeting.HotelUrl = hotel.HotelUrl;
             }
-            return Ok(meetingEventDto);
+
+
+            GetMeetingEventWithPageDetails model = new()
+            {
+                PageDetails = pagedetails,
+                Email = groupContact.GroupMail,
+                Mobile = groupContact.GroupPhone,
+                MeetingEvent = meetingEventDto
+            };
+            return Ok(model);
         }
 
 
