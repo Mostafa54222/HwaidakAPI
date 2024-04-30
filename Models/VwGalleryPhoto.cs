@@ -44,4 +44,6 @@ public partial class VwGalleryPhoto
     public string PhotoFormat { get; set; }
 
     public double? PhotoRatio { get; set; }
+
+    public int? GalleryPosition { get; set; }
 }

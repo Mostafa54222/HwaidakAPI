@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using HwaidakAPI.DTOs.Responses.Restaurants;
 using HwaidakAPI.DTOs;
 using HwaidakAPI.Errors;
 using HwaidakAPI.Models;
@@ -23,15 +22,13 @@ namespace HwaidakAPI.Controllers
         }
 
         [HttpGet("{languageCode}/{hotelUrl}")]
-        public async Task<ActionResult<GetRestaurantsList>> GetHotelGallery(string hotelUrl, string languageCode = "en")
+        public async Task<ActionResult<GetGalleryResponse>> GetHotelGallery(string hotelUrl, string languageCode = "en")
         {
             var hotel = await _context.VwHotels.Where(x => x.HotelUrl == hotelUrl && x.HotelStatus == true && x.LanguageAbbreviation == languageCode).FirstOrDefaultAsync();
             if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
 
 
-            var gallerySections = await _context.VwGalleries.Where(x => x.LanguageAbbreviation == languageCode && x.HotelUrl == hotelUrl && x.GalleryStatus == true).OrderBy(x => x.GalleryPosition).ToListAsync();
-            var galleryPhotos = await _context.VwGalleryPhotos.Where(x => x.LanguageAbbreviation == languageCode && x.PhotoStatus == true && x.GalleryStatus == true).OrderBy(x => x.PhotoPosition).ToListAsync();
-            var gallerySectionDto = _mapper.Map<List<GetGallerySections>>(gallerySections);
+            var galleryPhotos = await _context.VwGalleryPhotos.Where(x => x.LanguageAbbreviation == languageCode && x.PhotoStatus == true && x.GalleryStatus == true).OrderBy(x => x.GalleryPosition).ToListAsync();
             var galleryPhotosDto = _mapper.Map<List<GetGalleryPhotos>>(galleryPhotos);
 
 
