@@ -2588,7 +2588,7 @@ public partial class HwaidakHotelsWsdbContext : DbContext
             entity.Property(e => e.GroupFaqBannerMobileHeight).HasColumnName("GroupFAQ_BannerMobile_Height");
             entity.Property(e => e.GroupFaqBannerMobileWidth).HasColumnName("GroupFAQ_BannerMobile_Width");
             entity.Property(e => e.GroupFaqBannerTablet)
-                .HasMaxLength(50)
+                .HasMaxLength(250)
                 .HasColumnName("GroupFAQ_BannerTablet");
             entity.Property(e => e.GroupFaqBannerTabletHeight).HasColumnName("GroupFAQ_BannerTablet_Height");
             entity.Property(e => e.GroupFaqBannerTabletWidth).HasColumnName("GroupFAQ_BannerTablet_Width");
@@ -2633,7 +2633,7 @@ public partial class HwaidakHotelsWsdbContext : DbContext
             entity.Property(e => e.GroupNewsBannerMobileHeight).HasColumnName("GroupNews_BannerMobile_Height");
             entity.Property(e => e.GroupNewsBannerMobileWidth).HasColumnName("GroupNews_BannerMobile_Width");
             entity.Property(e => e.GroupNewsBannerTablet)
-                .HasMaxLength(50)
+                .HasMaxLength(250)
                 .HasColumnName("GroupNews_BannerTablet");
             entity.Property(e => e.GroupNewsBannerTabletHeight).HasColumnName("GroupNews_BannerTablet_Height");
             entity.Property(e => e.GroupNewsBannerTabletWidth).HasColumnName("GroupNews_BannerTablet_Width");
@@ -3614,6 +3614,7 @@ public partial class HwaidakHotelsWsdbContext : DbContext
             entity.Property(e => e.LangId).HasColumnName("LangID");
             entity.Property(e => e.MeetingCapacity).HasColumnType("ntext");
             entity.Property(e => e.MeetingCellingHeight).HasMaxLength(250);
+            entity.Property(e => e.MeetingEventsType).HasMaxLength(250);
             entity.Property(e => e.MeetingLength).HasMaxLength(250);
             entity.Property(e => e.MeetingSize).HasMaxLength(250);
             entity.Property(e => e.MeetingWidths).HasMaxLength(250);
@@ -6652,6 +6653,7 @@ public partial class HwaidakHotelsWsdbContext : DbContext
             entity.Property(e => e.LastUpdate).HasColumnType("smalldatetime");
             entity.Property(e => e.MeetingCapacity).HasColumnType("ntext");
             entity.Property(e => e.MeetingCellingHeight).HasMaxLength(250);
+            entity.Property(e => e.MeetingEventsType).HasMaxLength(250);
             entity.Property(e => e.MeetingLength).HasMaxLength(250);
             entity.Property(e => e.MeetingSize).HasMaxLength(250);
             entity.Property(e => e.MeetingWidths).HasMaxLength(250);

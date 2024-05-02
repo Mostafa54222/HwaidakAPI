@@ -25,6 +25,8 @@ public partial class TblMeetingsEventsContent
 
     public string MeetingSize { get; set; }
 
+    public string MeetingEventsType { get; set; }
+
     public string MeetingLength { get; set; }
 
     public string MeetingWidths { get; set; }

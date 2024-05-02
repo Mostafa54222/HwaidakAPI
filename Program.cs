@@ -1,5 +1,7 @@
+using HwaidakAPI.Helpers;
 using HwaidakAPI.Middleware;
 using HwaidakAPI.Models;
+using HwaidakAPI.OPModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -16,6 +18,15 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<HwaidakHotelsWsdbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection"),
         sqlServerOptions => sqlServerOptions.EnableRetryOnFailure()));
+
+
+builder.Services.AddDbContext<HwaidakHotelsOpedbContext>(options => options.UseSqlServer(
+    builder.Configuration.GetConnectionString("OPDBConnectionString"),
+        sqlServerOptions => sqlServerOptions.EnableRetryOnFailure()));
+
+
+builder.Services.AddScoped<IEmailSender, EmailSender>();
+
 
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowAnyOrigin", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

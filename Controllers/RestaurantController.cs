@@ -30,7 +30,7 @@ namespace HwaidakAPI.Controllers
             if (hotel == null) return NotFound(new ApiResponse(404, "there is no hotel with this name"));
 
 
-            var restaurants = await _context.VwRestaurants.Where(x => x.LanguageAbbreviation == languageCode && x.HotelUrl == hotelUrl && x.RestaurantStatus==true &&x.IsDeleted==false).ToListAsync();
+            var restaurants = await _context.VwRestaurants.Where(x => x.LanguageAbbreviation == languageCode && x.HotelUrl == hotelUrl && x.RestaurantStatus==true &&x.IsDeleted==false).OrderBy(x => x.RestaurantPosition).ToListAsync();
 
             var restaurantDto = _mapper.Map<List<GetRestaurant>>(restaurants);
 

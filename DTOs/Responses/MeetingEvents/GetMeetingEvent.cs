@@ -25,6 +25,8 @@ namespace HwaidakAPI.DTOs.Responses.MeetingEvents
         public string MeetingWidths { get; set; }
 
         public string MeetingCellingHeight { get; set; }
+        public string MeetingCapacity { get; set; }
+        public string MeetingEventsType { get; set; }
 
 
 
